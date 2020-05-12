@@ -1,0 +1,9 @@
+# List the channels where the requested conda packages reside
+# Here, we needed to add `conda-forge` as well as there were an
+# implicit hidden dependency on that -- not common!
+channels:
+  - bioconda
+  - conda-forge
+# List the packages needed by the calling snakemake rule
+dependencies:
+  - slamdunk

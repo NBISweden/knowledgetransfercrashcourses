@@ -1,0 +1,8 @@
+# The configuration file should be in yaml-format (as here) or in json
+# format The syntax creates a nested dictionary when read into the
+# Snakefile, so variables defined below can be accessed in the
+# Snakefile as, e.g.,
+#   - config["reference"] -> "/crex/proj/uppstore2019103/anika/reference.fa"
+
+reference: /crex/proj/uppstore2019103/anika/reference.fa
+regions: /crex/proj/uppstore2019103/anika/transcripts.bed

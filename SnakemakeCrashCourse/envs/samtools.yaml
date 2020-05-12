@@ -1,0 +1,6 @@
+# List the channels where the requested conda packages reside
+channels:
+   - bioconda
+# list the packages needed by the calling snakemake rule
+dependencies:
+   - samtools >=1.9

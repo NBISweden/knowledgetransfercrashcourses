@@ -1,0 +1,22 @@
+# Minimal tabular sample file for the Slamdunk workflow. Please create
+# you own to match your needs. The column headers 'sample', 'fastq'
+# and 'readlength' are currently the only obligatory ones, but you can
+# add columns with additional metadata.
+#
+sample	fastq	readlength
+KI-1-0	/crex/proj/uppstore2019103/anika/SLAM_Seq_G0_11022020/trimmed/KI-1-0_trimmed.fastq.gz	71
+KI-1-30	/crex/proj/uppstore2019103/anika/SLAM_Seq_G0_11022020/trimmed/KI-1-30_trimmed.fastq.gz	71
+KI-1-45	/crex/proj/uppstore2019103/anika/SLAM_Seq_G0_11022020/trimmed/KI-1-45_trimmed.fastq.gz	71
+KI-2-0	/crex/proj/uppstore2019103/anika/SLAM_Seq_G0_11022020/trimmed/KI-2-0_trimmed.fastq.gz	71
+KI-3-0	/crex/proj/uppstore2019103/anika/SLAM_Seq_G0_11022020/trimmed/KI-3-0_trimmed.fastq.gz	71
+#
+# If read in  the Snakefile as
+# `samples = pd.read_csv("Slamdunk/SlamdunkSamples.tsv", comment="#").set_index("sample")`,
+# these can be expanded to python lists or dictionaries in Snakefile rules, e.g., as:
+#   - samples.index => [ "samples1", "samples2" ]    # row.names is set to equal column 'sample'
+#   - samples["fastq"] => {
+#        "KI-1-0" : "/crex/proj/uppstore2019103/anika/SLAM_Seq_G0_11022020/trimmed/KI-1-0_trimmed.fastq.gz",
+#        "KI-1-30" : "/crex/proj/uppstore2019103/anika/SLAM_Seq_G0_11022020/trimmed/KI-1-30_trimmed.fastq.gz"
+#        <...>
+#     }
+#   - samples["fastq"]["KI-1-0"] => "/crex/proj/uppstore2019103/anika/SLAM_Seq_G0_11022020/trimmed/KI-1-0_trimmed.fastq.gz"
