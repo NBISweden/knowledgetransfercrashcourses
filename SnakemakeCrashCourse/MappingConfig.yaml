@@ -1,8 +1,9 @@
 # The configuration file should be in yaml-format (as here) or in json
-# format The syntax creates a nested dictionary when read into the
-# Snakefile, so variables defined below can be accessed in the
-# Snakefile as, e.g.,
-#   - config["reference"] -> "/crex/proj/uppstore2019103/anika/reference.fa"
+# format. when read into the Snakefile as follows:
+#     configfile: "mappingConfig.yaml"
+# the syntax creates a nested dictionary and the variables defined
+# below can be accessed in the Snakefile rules, e.g.,
+#   - config["reference"] expands introduction "/path/to/ExampleData/reference/Mus_musculus.GRCm38.dna.chromosome.19.fa.gz"
 
-reference: /crex/proj/uppstore2019103/anika/reference.fa
-regions: /crex/proj/uppstore2019103/anika/transcripts.bed
+reference: /path/to/ExampleData/reference/Mus_musculus.GRCm38.dna.chromosome.19.fa.gz
+annotation: /path/to/ExampleData/annotation/Mus_musculus.GRCm38.99.chromosome.19.gtf.gz

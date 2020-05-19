@@ -2,7 +2,7 @@
 set -e
 
 # get the workflow base directory (=where this script reside)
-DIR=${0%doSlamdunk.sh}
+DIR=${0%doMapping.sh}
 
 # Allow for either running on cluster or on local computer/laptop
 if [ "$CLUSTER" = "rackham" ]; then # Change/add cluster name if needed
@@ -17,25 +17,27 @@ if [ "$CLUSTER" = "rackham" ]; then # Change/add cluster name if needed
 #    module load conda # disabled for now, as it appears slow
     module load snakemake/5.10.0
 
-    # To run on cluster, a cluster config file is needed. If not present, copy from
-    # worlflow base directory. Update the contact email at the same time.
-    if [[ ! -f SlamdunkCluster.yaml ]]; then
-	echo "No SlamdunkCluster.yaml found in present directory"
-	echo "Do you want me to set this directory up as a Slamdunk analysis directory (y/n)?"
+    # To run on cluster, a cluster config file is needed. If not present,
+    # copy from workflow base directory. Update the contact email at
+    # the same time.
+    if [[ ! -f mappingCluster.yaml ]]; then
+	echo "No mappingCluster.yaml found in present directory"
+	echo "Do you want me to set this directory up as a analysis directory (y/n)?"
 	read answer
 	if [[ "$answer" != "y" ]]; then
 	    exit
 	fi
 	echo "What's your email (for UPPMAX job error notifications)?"
 	read email
-	awk -v email=$email '{sub("your@email", email, $0); print $0}' $DIR/SlamdunkCluster.yaml > SlamdunkCluster.yaml
-	echo "SlamdunkCluster.yaml copied with email updated. Your can make further changes to this file manually."
+	awk -v email=$email '{sub("your@email", email, $0); print $0}' $DIR/mappingCluster.yaml > mappingCluster.yaml
+	echo "mappingCluster.yaml copied with email updated. Your can make further changes to this file manually."
     fi
-    
+
     time snakemake \
-      --snakefile $DIR/SlamdunkSnakefile \
+      --snakefile $DIR/mapping.smk \
       --use-conda \
-      --cluster-config SlamdunkCluster.yaml \
+      --cores 1 \
+      --cluster-config mappingCluster.yaml \
       --cluster " sbatch -J {cluster.name} -A {cluster.account} -p {cluster.partition} -n {cluster.n} -t {cluster.time} {cluster.other} " \
       -j \
       $@
@@ -49,13 +51,13 @@ if [ "$CLUSTER" = "rackham" ]; then # Change/add cluster name if needed
    #                  taken from the cluster-config
    # -j               Tells snakemake all cores available for the job
    # $@               pass additional arguments (requested outout file, options)
-   #                  to snakemake, e.g. `doSlamdunk.sh -n myref.fasta` will add
+   #                  to snakemake, e.g. `doMapping.sh -n myref.fasta` will add
    #                  `-n myref.fasta` directly to the end of the snakemake call
    # \                `line break`, marks that the command continues on the
    #                  next line (NB! no space or text after the `\`)
 else
     # When run locally, we don't need --cluster-config or --cluster
-    time snakemake -s $DIR/SlamdunkSnakefile --use-conda $@
+    time snakemake -s $DIR/mapping.smk --use-conda --cores 1 $@
 fi
 
 

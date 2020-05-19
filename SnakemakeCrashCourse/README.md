@@ -24,6 +24,7 @@
     - [Other very useful options](#other-very-useful-options)
     - [Wrapper script for Snakemake](#wrapper-script-for-snakemake)
   - [Exercises](#exercises)
+    - [Extra-curricular exercise](#extra-curricular-exercise)
 
 <!-- /code_chunk_output -->
 
@@ -48,7 +49,8 @@ In another sense, snakemake could be described as "_python_ with inspiration
 from the _make_ program". However, the basic snakemake rule syntax is not so
 very much python... and you definitely don't need to be a python expert to start
 using snakemake. However, you can use python code snippets _almost_ anywhere in
-the Snakefile (see examples in [Mapping example Snakefile](/Mapping.smk)).
+the Snakefile (see examples in the Mapping example Snakefile
+[mapping.smk](/mapping.smk)).
 
 ## The Snakefile
 
@@ -91,15 +93,18 @@ rule linkFastq:
 Other important directives include
 
 - `params:` which can define other important parameters, typically _not_ files.
+
 - `log:` which defines a log file that can be used to capture `std output` and`std error`.
-- `conda:` tells snakemake how create a conda environment providing programs required by the rule (see examples in MappingSnakefile).
+
+- `conda:` tells snakemake how create a conda environment providing programs required by the rule.
+
 - `group:` assigns a "cluster job group" to a rule, see below.
 
-Examples on how these are used can be found in the Snakefile `Mapping.smk`.
+Examples on how these are used can be found in [mapping.smk](/mapping.smk).
 
 ### Wildcards and connecting rules
 
-If `snakemke` is run requesting the output `fastq/mysample.fastq`  (and with a
+If `snakemake` is run requesting the output `fastq/mysample.fastq`  (and with a
 Snakefile with the rule above), then `snakemake` will first check that the
 requested output file does not already exists, in which case it reports this and
 stops. Otherwise, it will parse the Snakefile looking for a rule with output
@@ -111,9 +116,9 @@ It will then look for its input file, which after expanding the wildcard becomes
 `"path/to/originals/mysample.fastq"`; if this file exists, snakemake will use
 this file as the input, Otherwise, it will look for another rule with an output
 matching `"path/to/originals/mysample.fastq"`and run this other rule to create
-the input. If you study the workflow in MappingSnakefile, you will see that
-different rules have matching output and input; this creates a sequence of rules
-to be run -- a *workflow*.
+the input. If you study the workflow in [mapping.smk](/mapping.smk), you will
+see that different rules have matching output and input; this creates a sequence
+of rules to be run -- a *workflow*.
 
 ### Rule order and the Target rule
 
@@ -121,18 +126,18 @@ If snakemake is run without an explicit file argument (see below under [Running
 Snakemake](#Running\ Snakemake)), the first rule in the Snakefile is by default
 run. Therefore, the first rule is often designed as a, so-called, _target_ rule
 that only has an input directive comprising the desired final output files (see
-example in MappingSnakefile).
+example in [mapping.smk](/mapping.smk)).
 
 With the exception of the Target rule, rules can be written in any order in the
 snakefile. It makes sense to have them in 'chronological' order, i.e., the order
 they are expected to be executed.
 
-The workflow in [Mapping.smk](Mapping.smk) is set up to ananlyze a single sample
-by first soft-link the external files (fastq-file and reference genome fasta
-file) needed into the analysis directory, map all reads in the fastq file the
-reference genome, and finally sorting and indexing the resulting bam-file. We
-can run the full workflow for a single sample, _s1_, by setting the final
-indexed bam-file  (`mapped/s1.bam.bai`) as the  argument of `snakemake`.
+The workflow in [mapping.smk](/mapping.smk) is set up to analyze a
+single sample by first soft-link the external files (fastq-file and reference
+genome fasta file) needed into the analysis directory, map all reads in the
+fastq file the reference genome, and finally sorting and indexing the resulting
+bam-file. We can run the full workflow for a single sample, _s1_, by setting the
+final indexed bam-file  (`mapped/s1.bam.bai`) as the  argument of `snakemake`.
 However, if we list the output files from the final rule (i.e., the indexed
 bam-files) for all samples in the Target rule, just running `snakemake` without
 argument will go through the full workflow for all samples.
@@ -147,7 +152,7 @@ cpus/threads), then these could be sent as one single job by assigning them the
 same *group name* using the directive `group`, see example below. Moreover, if
 some jobs are ridiculously short (e.g., soft-linking external files), these can
 be run on the login node by listing them as `localrules` (see example in
-[Mapping.smk](Mapping.smk)).
+[mapiing.smk](/mapping.smk)).
 
 ### Using `conda` environments
 
@@ -188,18 +193,20 @@ executing `shell` commands of the rule.
 Comments can be added in either of the following ways:
 
 - `#...` Everything after a hash on a line is ignored by snakemake
-- `"""..."""` Everything between triplicated double quotes will be ignored
-by snakemake. However, snakemake will still try to expand strings
-between curly brackets as variables, which can lead to errors.
-- `'''...'''` Everything between triplicated single quotes will be
-ignored by snakemake. This will prevent variable expansions,
-so use this to comment out code, etc.
+
+- `"""..."""` Everything between triplicated double quotes will be ignored by
+  snakemake. However, snakemake will still try to expand strings between curly
+  brackets as variables, which can lead to errors.
+
+- `'''...'''` Everything between triplicated single quotes will be ignored by
+  snakemake. This will prevent variable expansions, so use this to comment out
+  code, etc.
 
 
 ## The configure files
 
-It is convenient to define variables, including external input data,
-in a configure file. There are two variants of config files.
+It is convenient to define variables, including external input data, in a
+configure file. There are two variants of config files.
 
 ### _Standard_ configure files in yaml or json format
 
@@ -248,14 +255,14 @@ variable3:
 If the configure file location is defined in the Snakefile, as, e.g.,
 
 ```
-configfile: "MappingConfig.yaml"
+configfile: "mappingConfig.yaml"
 ```
 
 either of the configure file examples above will be expand to the same python
 dictionary, which can be accessed by `config["variablename"]`. Thus,
 `config["variable1"]` will expand to 17, `config["variable2"]` expands to the
 python list `["value1", "value2"]`, and `config["variable3"]["key1"]` expand to
-`"value1"` (see further [MappingConfig.yaml](MappingConfig.yaml)).
+`"value1"` (see further [mappingConfig.yaml](mappingConfig.yaml)).
 
 ### _Tabular_ configure files in spreadsheet text format
 
@@ -318,7 +325,8 @@ snakemake -s path/to/Snakefile path/to/requested/outputfile
 
 ### Using `conda` environments
 
-Activating the use of `conda` environments, for rules with `conda` directives, is done with the option `--use-conda`, e.g.,
+Activating the use of `conda` environments, for rules with `conda` directives,
+is done with the option `--use-conda`, e.g.,
 
 ```
 snakemake -s path/to/Snakefile --use-conda path/to/requested/outputfile
@@ -326,20 +334,22 @@ snakemake -s path/to/Snakefile --use-conda path/to/requested/outputfile
 
 ### Running on a Cluster
 
-**Important:** Snakemake should always be started in a _virtual terminal_
-(see further the TmuxCrashCourse.md) on the _login node_. Snakemake will
+**Important:** Snakemake should always be started in a *virtual terminal*
+(see further the TmuxCrashCourse.md) on the *login node*. Snakemake will
 then, based on the Snakefile, determine jobs and send them to the cluster.
 *You do not need to manually submit jobs!*
 
 To run snakemake in parallel on UPPMAX, the following options are used:
 
 - `--cluster`: this defines the sbatch command needed to commit jobs to the cluster, and uses rule-specific variables defined in a *cluster-config file*.
+
 - `--cluster-config`: this tells snakemake where to look for the *cluster-config file*.
 
 
 #### The cluster config file
 
-The yaml-formatted cluster-config file defines values for the various `sbatch` options (see [UPPMAX `slurm` user guide ](https://www.uppmax.uu.se/support/user-guides/slurm-user-guide/)), e.g.,
+The yaml-formatted cluster-config file defines values for the various `sbatch`
+options (see [UPPMAX `slurm` user guide](https://www.uppmax.uu.se/support/user-guides/slurm-user-guide/)), e.g.,
 
 ```
 __default__ :
@@ -355,8 +365,14 @@ mapAndFilter:
   time: 0-01:30:00
 ```
 
-The `__default__` values are implicitly used for all non-local rules, while explicit rule- or group-specific settings change one or more individual values for the corresponding rule or group (see further examples in  [MappingCluster.yaml](MappingCluster.yaml)),
-These values can be accessed in the `--cluster` `sbatch` command as wildcards of the form `{cluster.variable}`. These wildcards are expanded on a rule basis, so that for rules in the group `mapAndFilter` `{cluster.time}` will expand to 1.5h, while for all other rules it will expand to 2h.
+The `__default__` values are implicitly used for all non-local rules, while
+explicit rule- or group-specific settings change one or more individual values
+for the corresponding rule or group (see further examples in
+[mappingCluster.yaml](mappingCluster.yaml)), These values can be accessed in the
+`--cluster` `sbatch` command as wildcards of the form `{cluster.variable}`.
+These wildcards are expanded on a rule basis, so that for rules in the group
+`mapAndFilter` `{cluster.time}` will expand to 1.5h, while for all other rules
+it will expand to 2h.
 
 #### The `sbatch` command
 
@@ -381,7 +397,7 @@ useful ones here:
 
 ### Wrapper script for Snakemake
 
-When a lot of the `snakemake` options above are used, the commnd-line call to `snakemake` becomes quite cumbersome to type each time, e.g.,
+When a lot of the `snakemake` options above are used, the command-line call to `snakemake` becomes quite cumbersome to type each time, e.g.,
 
 ```
 snakemake -s path/to/Snakefile --use-conda --cluster-config pathe/to/cluster-config-file -- cluster " sbatch -J {cluster.name} -A {cluster.account} -p {cluster.partition} -n {cluster.n} -t {cluster.time} {cluster.other}" -p -r -n path/to/requested/outputfile
@@ -392,7 +408,7 @@ that encapsulates, i.e., hides, all the absolutely necessary options. The
 wrapper script is designed so that other, not encapsulated, options (e.g., `-n`)
 can be passed to the wrapper script and it will be passed on to snakemake. This
 wrapper script is then called instead of `snakemake`. An example wrapper script
-can be found in [`doMapping.sh`](./doMapping.sh), which also contain some
+can be found in [doMapping.sh](./doMapping.sh), which also contain some
 additional convenience items.
 
 If we use this wrapper script, the call above simplifies to
@@ -403,28 +419,35 @@ bash doMapping.sh -n path/to/requested/outputfile
 
 
 ## Exercises
-In the exercises, the workflow defined in [Mapping.smk](Mapping.smk) is used together with this [Example data](/ExampleData/README.md).
+
+In the exercises, the workflow defined in the Snakefile
+[mapping.smk](/mapping.smk) is used together with this [Example
+data](../ExampleData/README.md).
 
 Throughout all exercises, take a look at the Snakefile
-[Mapping.smk](Mapping.smk), the config files
-[MappingConfig.yaml](MappingConfig.yaml) and the env files, and try to
+[mapping.smk](mapping.smk), the config files
+[mappingConfig.yaml](mappingConfig.yaml) and
+[mappingSamples.tsv](mappingSamples.tsv), and the env files, and try to
 understand what they do and what happens when you run the commands in the
-exrercises.
+exercises.
 
 1. Create a *Analysis working directory* (`awd`) --- this should be different and outside the git working directory (`gwd`) -- and `cd` into `awd`.
-2. Run `snakemake` from `awd` to create the output file `fastq/s1.FASTQ.gz`. Do not run it as a cluster job or use the wrapper script `doMapping.sh` yet, but think about what minimum options are needed.
+
+2. Run `snakemake` from `awd` to create the output file `fastq/s1_R1.fastq.gz`. Do not run it as a cluster job or use the wrapper script `doMapping.sh` yet, but think about what minimum options are needed. (Tip: It's good practice to do a dry-run first to check check what happens and if all options are set correctly.)  
 What files were created? Why?
+
 3. Use the `doMapping.sh` wrapper script and run `snakemake` without a output file argument.  
-What samples did you get final out put files for? Why?
-4. Update the workflow so that final output files also for sample `s2` is produced and rerun the command used in 3. Tip: edit the *local* config files in `awd` (not those in `gwd`).
+What samples did you get final output files for? Why?
+
+4. Update the workflow so that final output files also for a sample named `s2`, is produced; use input `fastq SRR3222412-19_1.fq.gz` and `SRR3222412-19_1.fq.gz` in the [Example Data directory](../ExampleData/README.md) for `s_2`. Then rerun the command used in 3. (Tip: Edit the *local* config files in `awd` -- not those in `gwd`; use a dry-run to check if you got things right.)  
+Did it work? Were all samples run?
+
 
 ### Extra-curricular exercise
 
-5. Add a rule that uses the program `featureCount` to summarize the read counts on the different features of the annotated gene model file [geneModel.gtf](/data/GeneModel/geneModel.gtf). The relevant shell command for featureCount would be:
-
+5. Add a rule that uses the program `featureCount` to summarize the read counts on the different features of the genome annotation file [../ExampleData/Mus_musculus.GRCm38.99.chromosome.19.gtf.gz](../ExampleData/annotation/README.md). The relevant shell command for featureCount would be:
 ```
 featureCounts -g gene_id -t exon -s 1 -R BAM -a {input.gtf} -o {output.counts} {input.bam}
 ```
 Remember to also change the final output files in the target rule.  
-Rerun the command in 3.  
 Did it work?
