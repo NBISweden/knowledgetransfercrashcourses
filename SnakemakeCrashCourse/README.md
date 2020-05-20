@@ -431,6 +431,7 @@ Throughout all exercises, take a look at the Snakefile
 understand what they do and what happens when you run the commands in the
 exercises.
 
+0. If you have not already done so, fork the Crash Course Bitbucket repository and then clone a git working directory (_gwd_), as described in the [Git Crash course](../GitCrashCourse/README.md)
 1. Create a *Analysis working directory* (`awd`) --- this should be different and outside the git working directory (`gwd`) -- and `cd` into `awd`.
 
 2. Run `snakemake` from `awd` to create the output file `fastq/s1_R1.fastq.gz`. Do not run it as a cluster job or use the wrapper script `doMapping.sh` yet, but think about what minimum options are needed. (Tip: It's good practice to do a dry-run first to check check what happens and if all options are set correctly.)  
@@ -439,7 +440,7 @@ What files were created? Why?
 3. Use the `doMapping.sh` wrapper script and run `snakemake` without a output file argument.  
 What samples did you get final output files for? Why?
 
-4. Update the workflow so that final output files also for a sample named `s2`, is produced; use input `fastq SRR3222412-19_1.fq.gz` and `SRR3222412-19_1.fq.gz` in the [Example Data directory](../ExampleData/README.md) for `s_2`. Then rerun the command used in 3. (Tip: Edit the *local* config files in `awd` -- not those in `gwd`; use a dry-run to check if you got things right.)  
+4. Update the workflow so that final output files also for a sample named `s2`, is produced; use input fastq `SRR3222412-19_1.fq.gz` and `SRR3222412-19_1.fq.gz` in the [Example Data directory](../ExampleData/README.md) for `s_2`. Then rerun the command used in 3. (Tip: Edit the *local* config files in `awd` -- not those in `gwd`; use a dry-run to check if you got things right.)  
 Did it work? Were all samples run?
 
 
