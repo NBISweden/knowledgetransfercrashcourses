@@ -431,7 +431,7 @@ Throughout all exercises, take a look at the Snakefile
 understand what they do and what happens when you run the commands in the
 exercises.
 
-0. If you have not already done so, fork the Crash Course Bitbucket repository and then clone a git working directory (_gwd_), as described in the [Git Crash course](../GitCrashCourse/README.md)
+0. If you have not already done so, fork the Crash Course Bitbucket repository and then clone a git working directory (_gwd_), as described in the [Git Crash course](../GitCrashCourse/README.md). To also appreciate `snakemake`'s cluster capabilities you should do this on an UPPMAX cluster login-node (e.g., rackham), but you can run on your laptop as well.
 1. Create a *Analysis working directory* (`awd`) --- this should be different and outside the git working directory (`gwd`) -- and `cd` into `awd`.
 
 2. Run `snakemake` from `awd` to create the output file `fastq/s1_R1.fastq.gz`. Do not run it as a cluster job or use the wrapper script `doMapping.sh` yet, but think about what minimum options are needed. (Tip: It's good practice to do a dry-run first to check check what happens and if all options are set correctly.)  
@@ -447,8 +447,7 @@ Did it work? Were all samples run?
 ### Extra-curricular exercise
 
 5. Add a rule that uses the program `featureCount` to summarize the read counts on the different features of the genome annotation file [../ExampleData/Mus_musculus.GRCm38.99.chromosome.19.gtf.gz](../ExampleData/annotation/README.md). The relevant shell command for featureCount would be:
-```
-featureCounts -g gene_id -t exon -s 1 -R BAM -a {input.gtf} -o {output.counts} {input.bam}
-```
-Remember to also change the final output files in the target rule.  
-Did it work?
+
+        featureCounts -g gene_id -t exon -s 1 -R BAM -a {input.gtf} -o {output.counts} {input.bam}  
+    Remember to also change the final output files in the target rule.  
+    Did it work?
