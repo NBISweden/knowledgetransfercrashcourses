@@ -1,8 +1,9 @@
+# Snakemake Crash Course
+
 **WORK IN PROGRESS**  
-**Todo: see repo issues**  
+**Todo: see also repo issues**  
 **Feedback: please add suggestions to repo issues**
 
-# Snakemake Crash Course
 
 This repo contains a couple of crash courses to common tools used in NBIS projects to ensure reproducibility and documentation. The target audience are the recipient users in NBIS projects.
 
@@ -23,7 +24,7 @@ A version control system stores and keep track of your workflow code and forms  
 
 ### 2. Environment management
 
-Reproducing a workflow may require installing several software tools and libraries. `conda` is an open source environment management system that greatly enhances (re)creating a software environment, e.g., required by a workflow. Take the [Conda crash course](TBA) (to be added) to learn how to use it.
+Reproducing a workflow may require installing several software tools and libraries. `conda` is an open source environment management system that greatly enhances (re)creating a software environment, e.g., required by a workflow. Take the [Conda Crash Course](/CondaCrashCourse/README.md) (to be added) to learn how to use it.
 
 An alternative way to manage environments, that provide an even higher level of reproduciblility by providing also the operating system, are *containers* such as `docker` and `singularity`. These are *not* covered in this crash course.
 

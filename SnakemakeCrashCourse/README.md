@@ -7,7 +7,7 @@
   - [Prerequisites](#prerequisites)
   - [Introduction to Snakemake](#introduction-to-snakemake)
   - [The Snakefile](#the-snakefile)
-    - [Directives:](#directives)
+    - [Directives](#directives)
     - [Wildcards and connecting rules](#wildcards-and-connecting-rules)
     - [Rule order and the Target rule](#rule-order-and-the-target-rule)
     - [Cluster jobs, groups, and localrules](#cluster-jobs-groups-and-localrules)
@@ -31,26 +31,28 @@
 ## Prerequisites
 
 Please complete the [Git Crash Course](/GitCrashCourse/README.md), the [Conda
-crash course](TBA), and the [Tmux Crash Course](/TmuxCrashCourse/README.md)
+Crash Course](TBA), and the [Tmux Crash Course](/TmuxCrashCourse/README.md)
 before continuing.
 
 ## Introduction to Snakemake
 
-`snakemake` is a tool for designing and performing a workflows i.e., a sequence
+Snakemake is a tool for designing and performing a workflows i.e., a sequence
 of individual steps, each running programs or scripts, that is required to
 convert some input, say, sequencing reads, to a desired output, say, read counts
-for individual genomic regions of interest.
+for individual genomic regions of interest. The workflow can be branching, coalescing, and parts of it can be run in parallel.
 
-In one sense, a snakemake workflow can be viewed as just a glorified bash script
-performing the desired steps in sequence, but it provides a more structured
-layout and is more flexible and easier to rerun/reuse.
+In one sense, a snakemake workflow can be viewed as just a glorified `bash`
+script performing the desired steps in sequence, but it provides a more
+structured layout and is more flexible and easier to rerun/reuse.
 
 In another sense, snakemake could be described as "_python_ with inspiration
 from the _make_ program". However, the basic snakemake rule syntax is not so
 very much python... and you definitely don't need to be a python expert to start
 using snakemake. However, you can use python code snippets _almost_ anywhere in
 the Snakefile (see examples in the Mapping example Snakefile
-[mapping.smk](/mapping.smk)).
+[mapping.smk](./mapping.smk)).
+
+The structure of the workflow is defined in [The Snakefile](#The\ Snakefile), which uses  *wildcards* to provide a framework that is, more or less, *general* for the intended data analysis task to be performed. This general framework is then, typically, made more specific for the actual data and parameters at hand by the arguments given when [Running snakemake](#Running\ Snakemake) and by variable values set in [The configure files](#The\ configure\ files).
 
 ## The Snakefile
 
@@ -60,35 +62,53 @@ Each step is coded as a (usually) named `rule` and comprise a number of
 import of python modules or definition of python functions can be included in
 the Snakefile.
 
-### Directives:
+### Directives
 
-Directives The most important directives are the `output`, `input` and `shell`
-directives and are defined as follows (although here heavily documented):
+The most important directives are the `output`, `input` and `shell` directives.
+Their use is described in the code snippet and the associated text below. In the code snippet, extensive *comments* (starting with a `#`) are used to explain the *following* code line(s) (e.g., a directive). Notice that comments are ignored (not executed) by snakemake when running the workflow (see further [Comments in the code](#Comments\ in\ the\ code)).
 
 ```
-# Notice the colon (:) after the rule and the directives
-# (python style definitions)
-rule linkFastq:
-    # the output directive is a (possibly nested) list of desired
-    # output files, the list items can be named. The output directive
-    # defines wildcards inside curly brackets {}; the value of the
-    # wildcards is determined when the rule is called either from
-    # command-line or by another rule (more about this below).
+# Notice that a colon (:) is required after the rule and the directives
+# (compare python style function definitions)
+rule sortAndIndex:
+
+    # The output directive is a (possibly nested) list of desired
+    # output files, the list items can be named (notice that commas
+    # are required between list items). The output directive defines
+    # wildcards inside curly brackets {}; the value of the wildcards
+    # is determined when the rule is called either from command-line
+    # or by another rule (more about this below). If an output folder
+    # (here "mapped" is missing, snakemake creates it automatically.)
     output:
-        fastq = "fastq/{sample}.fastq"
-    # the input directive is a (possibly nested) list of required
-    # input files, the list items can be named. It often contains
-    # the wildcards defined in the output directive.       
+        bam = "mapped/{prefix}.bam",
+        bai = "mapped/{prefix}.bam.bai"
+
+    # The input directive is a (possibly nested) list of required
+    # input files, the list items can be named (notice that commas
+    # are required between list items). It often contains the wildcards
+    # defined in the output directive.       
     input:
-        fastq = "path/to/originals/{sample}.fastq"
+        sam = "mapped/{prefix}.sam",
+
     # The shell minimally contains the bash commands needed to
-    # convert input to output.  The code should quoted (use triple
+    # convert input to output.  The code should be quoted (use triple
     # quotes for code blocks and single quotes for single lines).
     shell:
         """
-        ln -s {input.fastq} {output.fastq}
+        exec &> {log.log}
+        echo "Create backup"
+
+        echo "Creating sorted and indexed bam"
+        samtools sort {input.sam} -o {output.bam}
+        samtools index {output.bam}
+
+        echo "Done"
         """
 ```
+
+- The `output` directive describes what files the rule can produce, which, in the example above, expands to the python dictionary `{"bam": "mapped/{prefix}.bam", "bai": "mapped/{prefix}.bam.bai"}`.   
+- The `input` directive describes the input files the rule require to do it job, which, in the example above, expands to the (single-itemed) python dictionary `{"sam": "mapped/{prefix}.sam"}`.  
+- The `shell` directive, describes the bash commands used to produce the output from the input. (Note, the `shell` directive can be replaced by the `script` or `run` directives, which are not covered here.)
 
 Other important directives include
 
@@ -98,27 +118,31 @@ Other important directives include
 
 - `conda:` tells snakemake how create a conda environment providing programs required by the rule.
 
-- `group:` assigns a "cluster job group" to a rule, see below.
+- `group:` assigns a "cluster job group" to a rule.
 
-Examples on how these are used can be found in [mapping.smk](/mapping.smk).
+Examples on how these are used can be found below and in the Snakefile [mapping.smk](/mapping.smk).
+
 
 ### Wildcards and connecting rules
 
-If `snakemake` is run requesting the output `fastq/mysample.fastq`  (and with a
-Snakefile with the rule above), then `snakemake` will first check that the
+If `snakemake` is run, with a Snakefile including the rule above, and requesting
+the output `mapped/mysample.bam` , then `snakemake` will first check that the
 requested output file does not already exists, in which case it reports this and
 stops. Otherwise, it will parse the Snakefile looking for a rule with output
-that matches the required output `fastq/mysample.fastq`. It will find that the
-rule `linkFasta` matches if wildcard `"{sample}"` is defined to be `"mysample"`,
-so it defines the wildcard and run the rule.
+that matches the required output `mapped/mysample.bam`. It will find that the
+rule `sortAndIndex` matches if wildcard `"{sample}"` is defined to be
+`"mysample"`, so it defines the wildcard `"{sample}" = "mysample"`and prepares
+to run the rule.
 
-It will then look for its input file, which after expanding the wildcard becomes
-`"path/to/originals/mysample.fastq"`; if this file exists, snakemake will use
-this file as the input, Otherwise, it will look for another rule with an output
-matching `"path/to/originals/mysample.fastq"`and run this other rule to create
-the input. If you study the workflow in [mapping.smk](/mapping.smk), you will
-see that different rules have matching output and input; this creates a sequence
-of rules to be run -- a *workflow*.
+It will then look for its input file required by the rule, which after expanding
+the wildcard becomes `mapped/mysample.sam`; if this file exists, snakemake will
+use this file as the input, Otherwise, it will look for another rule with an
+output matching `mapped/mysample.sam`and run this other rule to create the
+input. If you study the workflow in [mapping.smk](./mapping.smk), you will see
+that different rules have matching output and input; this behaviour creates a
+sequence of rules to be run to create `mapped/mysample.bam` -- a *workflow*!.
+(Can you see which rule in [mapping.smk](./mapping.smk) matches the output
+`"mapped/mysample.sam"`? What is its input after expanding the wildcard?).
 
 ### Rule order and the Target rule
 
@@ -126,13 +150,13 @@ If snakemake is run without an explicit file argument (see below under [Running
 Snakemake](#Running\ Snakemake)), the first rule in the Snakefile is by default
 run. Therefore, the first rule is often designed as a, so-called, _target_ rule
 that only has an input directive comprising the desired final output files (see
-example in [mapping.smk](/mapping.smk)).
+example in [mapping.smk](./mapping.smk)).
 
 With the exception of the Target rule, rules can be written in any order in the
 snakefile. It makes sense to have them in 'chronological' order, i.e., the order
 they are expected to be executed.
 
-The workflow in [mapping.smk](/mapping.smk) is set up to analyze a
+The workflow in [mapping.smk](./mapping.smk) is set up to analyze a
 single sample by first soft-link the external files (fastq-file and reference
 genome fasta file) needed into the analysis directory, map all reads in the
 fastq file the reference genome, and finally sorting and indexing the resulting
@@ -152,7 +176,7 @@ cpus/threads), then these could be sent as one single job by assigning them the
 same *group name* using the directive `group`, see example below. Moreover, if
 some jobs are ridiculously short (e.g., soft-linking external files), these can
 be run on the login node by listing them as `localrules` (see example in
-[mapiing.smk](/mapping.smk)).
+[mapiing.smk](./mapping.smk)).
 
 ### Using `conda` environments
 
@@ -262,7 +286,7 @@ either of the configure file examples above will be expand to the same python
 dictionary, which can be accessed by `config["variablename"]`. Thus,
 `config["variable1"]` will expand to 17, `config["variable2"]` expands to the
 python list `["value1", "value2"]`, and `config["variable3"]["key1"]` expand to
-`"value1"` (see further [mappingConfig.yaml](mappingConfig.yaml)).
+`"value1"` (see further [mappingConfig.yaml](./mappingConfig.yaml)).
 
 ### _Tabular_ configure files in spreadsheet text format
 

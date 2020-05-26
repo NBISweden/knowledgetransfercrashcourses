@@ -113,8 +113,9 @@ rule all:
 """ The remaining rules are written in the order of expected execution"""
 
 
-''' It is good practice to softlink all external files into the
-    working directory '''
+# Soft-linking
+""" It is good practice to softlink all external files into the
+    working directory """
 rule linkFastq:
     output:
         fastq_1 = "fastq/{sample}_R1.fastq.gz",
@@ -202,11 +203,11 @@ rule bowtie:
     output:
         sam = temp("mapped/{sample}.sam")
     input:
-        reference ="metadata/contigs.1.ebwt",
         # input could be a python list of several files (we could have
         # used `expand`, here as in the `all` rule -- how?)
         fastq_1 = "fastq/{sample}_R1.fastq",
-        fastq_2 = "fastq/{sample}_R2.fastq"
+        fastq_2 = "fastq/{sample}_R2.fastq",
+        reference ="metadata/contigs.1.ebwt"
     params:
         refprefix = "metadata/contigs",
     # The conda directive points to a conda environment file (see
