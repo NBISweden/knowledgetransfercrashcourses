@@ -1,32 +1,8 @@
 # Snakemake Crash Course
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
-<!-- code_chunk_output -->
+**TODO**
+- Maybe add rule to snakefile that downloads the reference (using wget) to reduce repo size
 
-- [Snakemake Crash Course](#snakemake-crash-course)
-  - [Prerequisites](#prerequisites)
-  - [Introduction to Snakemake](#introduction-to-snakemake)
-  - [The Snakefile](#the-snakefile)
-    - [Directives](#directives)
-    - [Wildcards and connecting rules](#wildcards-and-connecting-rules)
-    - [Rule order and the Target rule](#rule-order-and-the-target-rule)
-    - [Cluster jobs, groups, and localrules](#cluster-jobs-groups-and-localrules)
-    - [Using `conda` environments](#using-conda-environments)
-    - [Comments in the code](#comments-in-the-code)
-  - [The configure files](#the-configure-files)
-    - [_Standard_ configure files in yaml or json format](#_standard_-configure-files-in-yaml-or-json-format)
-    - [_Tabular_ configure files in spreadsheet text format](#_tabular_-configure-files-in-spreadsheet-text-format)
-  - [Running Snakemake](#running-snakemake)
-    - [Using `conda` environments](#using-conda-environments-1)
-    - [Running on a Cluster](#running-on-a-cluster)
-      - [The cluster config file](#the-cluster-config-file)
-      - [The `sbatch` command](#the-sbatch-command)
-    - [Other very useful options](#other-very-useful-options)
-    - [Wrapper script for Snakemake](#wrapper-script-for-snakemake)
-  - [Exercises](#exercises)
-    - [Extra-curricular exercise](#extra-curricular-exercise)
-
-<!-- /code_chunk_output -->
 
 ## Prerequisites
 

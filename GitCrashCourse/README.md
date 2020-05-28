@@ -1,5 +1,5 @@
 **Todo:**  
-  - Add info on applying for user account for, e.g.,Bitbucket
+  - Add info on how to apply for user account for, e.g., Bitbucket
 
 # A crash course to `git`
 
@@ -53,6 +53,7 @@ provide you with your own user-name and a password.
 ## Installing `git`
 
 ### UPPMAX
+
 `git` version 1.8.3.1 is installed on rackham; I usually use
 this version, but it is possible to get newer versions using
 the `module` system. Type
@@ -62,10 +63,12 @@ module spider git
 to see what versions are available, in that case.
 
 ### Other Unix/Linux
+
 Most Unix/Linux systems probably provides `git` through their installer (`apt-get`, `yum`, etc.). See [here](https://www.atlassian.com/git/tutorials/install-git#linux) for an installation tutorial (if needed, scroll down to Linux).
 
 ### MacOSX
 An Apple version of `git` is provided by Apple's Xcode program in its command line tools. Install Xcode from AppStore; open a terminal and type
+
 ```
 xcode-select --install
 ```
@@ -75,6 +78,7 @@ For the standard `git`, see
 a tutorial on `git` installation (if needed, scroll down to MacOSX).
 
 ### Windows
+
 I don't have much experience of Windows, but if you have an
 application providing unix terminal, maybe this also provides ’git’.
 
