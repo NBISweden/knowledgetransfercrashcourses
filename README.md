@@ -4,6 +4,10 @@
 **Todo: see also repo issues**  
 **Feedback: please add suggestions to repo issues**
 
+## Prerequisites
+Experience of working in a bash terminal
+
+## Introduction
 
 This repo contains a couple of crash courses to common tools used in NBIS projects to ensure reproducibility and documentation. The target audience are the recipient users in NBIS projects.
 
