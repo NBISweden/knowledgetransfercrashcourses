@@ -33,7 +33,7 @@ Conda can be used to update itself, simply by typing:
 
 ```
 conda update conda
-````
+```
 
 ### Local UPPMAX conda
 
