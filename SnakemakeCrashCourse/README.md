@@ -1,6 +1,7 @@
 # Snakemake Crash Course
 
 **TODO**
+
 - Maybe add rule to snakefile that downloads the reference (using wget) to reduce repo size
 
 
