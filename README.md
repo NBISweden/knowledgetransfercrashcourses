@@ -2,6 +2,7 @@
 
 **WORK IN PROGRESS**  
 **Todo: see also repo issues**  
+- Maybe list conda course first, because can be used to install the other:)
 - Maybe a separate course/page on yaml, since it pops up both infor conda and snakemake?
 **Feedback: please add suggestions to repo issues**
 
