@@ -6,6 +6,7 @@
 - Maybe one exercise could be to install git/snakemake with conda?
 - It would be neat if one could create a conda environment for a decent, *intuitive* cross-platform text-editor that have capabilities (correct indentation, code-formatting, etc.) to properly handle yaml- and  snakemake-formatted files, at least, but preferably also markdown and maybe also python and R/Rmarkdown. `Atom` would be an alternative, but there is no conda-package for atom yet. Maybe a TODO could be to create an `atom` package -- or find an alternative editor. (`Emacs` is actually my editor of preference, but that fails the *intuitive* criterium... and so does ’vim’:)
 - need feedback on how this works with Windows
+- [Snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html#installation-via-conda) recommends using the conda package `mamba` instead of plain `conda` (due to current problems with conda). Should this crash course follow that? I think `mamba` is meant to be a temporary fix so could be better to stick with `conda` to no over-complicate, but if it works better?
 
 ## Introduction to `conda`
 
