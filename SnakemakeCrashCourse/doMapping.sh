@@ -1,4 +1,4 @@
-#!usr/bin/env bash -l
+#!/usr/bin/env bash
 set -e
 
 # get the workflow base directory (=where this script reside)
