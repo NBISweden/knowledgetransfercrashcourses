@@ -98,12 +98,14 @@ Unloading the module is done by:
 ### Finding a conda packages
 
 To find out if there exists a conda packages for a certain package, the easiest 
-way is actually to google `conda <package name>`. Existing packages will have 
-an *anaconda cloud* page for the package, which tells:
+way is actually to google `conda <package name>`. You can also search 
+[Anaconda cloud](https://anaconda.org/) for packagaes 
+directly. Pages for packages at *anaconda cloud* tells:
 
 - which channel provides the packages
 - which systems the package is provided for, and
-- which version of the software the package provides (other versions can be found under the *files* tab or as described below).
+- which version of the software the package provides (other versions can be 
+found under the *files* tab or as described below).
 
 `conda` itself can also be used to search for packages:
 
@@ -111,7 +113,10 @@ an *anaconda cloud* page for the package, which tells:
 conda search --channel <channel> <package>
 ```
 
-A drawback is that you need to tell conda what channel to search using the option `--channel` (although the option can be repeated in the same command to search in several channels at the same time, e.g., `conda search --channel bioconda --channel conda-forge <package>`).
+A drawback is that you need to tell conda what channel to search using the 
+option `--channel` (although the option can be repeated in the same command to 
+search in several channels at the same time, e.g., 
+`conda search --channel bioconda --channel conda-forge <package>`).
 
 #### Searching on UPPMAX
 
