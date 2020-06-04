@@ -4,7 +4,14 @@
 
 - extremely preliminary and needs major editing and polishing
 - Maybe one exercise could be to install git/snakemake with conda?
-- It would be neat if one could create a conda environment for a decent, *intuitive* cross-platform text-editor that have capabilities (correct indentation, code-formatting, etc.) to properly handle yaml- and  snakemake-formatted files, at least, but preferably also markdown and maybe also python and R/Rmarkdown. `Atom` would be an alternative, but there is no conda-package for atom yet. Maybe a TODO could be to create an `atom` package -- or find an alternative editor. (`Emacs` is actually my editor of preference, but that fails the *intuitive* criterium... and so does ’vim’:)
+- It would be neat if one could create a conda environment for a decent, 
+*intuitive* cross-platform text-editor that have capabilities (correct 
+indentation, code-formatting, etc.) to properly handle yaml- and 
+snakemake-formatted files, at least, but preferably also markdown and maybe 
+also python and R/Rmarkdown. `Atom` would be an alternative, but there is no 
+conda-package for atom yet. Maybe a TODO could be to create an `atom` package 
+-- or find an alternative editor. (`Emacs` is actually my editor of preference, 
+but that fails the *intuitive* criterium... and so does ’vim’:)
 - need feedback on how this works with Windows
 - [Snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html#installation-via-conda) recommends using the conda package `mamba` instead of plain `conda` (due to current problems with conda). Should this crash course follow that? I think `mamba` is meant to be a temporary fix so could be better to stick with `conda` to no over-complicate, but if it works better?
 
@@ -12,22 +19,52 @@
 
 Conda is a cross-platform system for software package management.
 It greatly simplifies software installation on your computer.
-Moreover, it allows, in a very simple way, creating project-specific environments with a selection of installed programs needed for a particular project. Each time work is performed on the project, the environent is activated, and when work is done done, the environment is deactivated the standard software environment for system is back.
+Moreover, it allows, in a very simple way, creating project-specific 
+environments with a selection of installed programs needed for a particular 
+project. Each time work is performed on the project, the environent is 
+activated, and when work is done done, the environment is deactivated the 
+standard software environment for system is back.
 
-Conda works on MacOS, Windows and Unix/Linux systems. This is handy for reproducibility as, in principle, a script developed inside a conda environment on, say, a Mac laptop can be transferred to, say, a linux system on UPPMAX, the corresponding conda environment for linux can be created and the script can be used there as well.
+Conda works on MacOS, Windows and Unix/Linux systems. This is handy for 
+reproducibility as, in principle, a script developed inside a conda environment 
+on, say, a Mac laptop can be transferred to, say, a linux system on UPPMAX, the 
+corresponding conda environment for linux can be created and the script can be 
+used there as well.
 
-Conda packages of programs are available from different *channels*, including [anaconda](https://repo.anaconda.com) (often set as the `defaults` or `main` channel in conda), [conda-forge](https://conda-forge.org) and [bioconda](https://bioconda.github.io); all (or at least the majority of) channels are isted in the [anaconda cloud](https://anaconda.org)). A large part of the available open-source bioinformatics programs are covered by these channels. Commercial or other programs  with restricted license can typically not be provided by these channels -- however, for reproducibility, open source programs are a more natural choice.
+Conda packages of programs are available from different *channels*, including 
+[anaconda](https://repo.anaconda.com) (often set as the `defaults` or `main` 
+channel in conda), [conda-forge](https://conda-forge.org) and 
+[bioconda](https://bioconda.github.io); all (or at least the majority of) 
+channels are isted in the [anaconda cloud](https://anaconda.org)). A large part 
+of the available open-source bioinformatics programs are covered by these 
+channels. Commercial or other programs  with restricted license can typically 
+not be provided by these channels -- however, for reproducibility, open source 
+programs are a more natural choice.
 
-It should be mentioned that, while `conda` is available for MacOS, Windows and Unix/Linux, certain packages may not be available for all platforms. This could be due to the actual program being platform-specific, to difficulties to port the program between platforms or to channel policies (*bioconda* not supporting Windows?).
+It should be mentioned that, while `conda` is available for MacOS, Windows and 
+Unix/Linux, certain packages may not be available for all platforms. This could 
+be due to the actual program being platform-specific, to difficulties to port 
+the program between platforms or to channel policies (*bioconda* not supporting 
+Windows?).
 
 ## Installation
 
-Conda can be installed using the Miniconda installer. The installer is downloaded from [here](https://docs.conda.io/en/latest/miniconda.html); choose the installer appropriate for your operating system and download it.
+Conda can be installed using the Miniconda installer. The installer is 
+downloaded from [here](https://docs.conda.io/en/latest/miniconda.html); choose 
+the installer appropriate for your operating system and download it.
 
-Detailed instruction can be found [here](https://conda.io/projects/conda/en/latest/user-guide/install/index.html). but briefly, the downloaded file is a *bash* script or a Windows executable, respectably, which is executed and the user is guided through the installation.
+Detailed instruction can be found [here](https://conda.io/projects/conda/en/latest/user-guide/install/index.html). 
+but briefly, the downloaded file is a *bash* script or a Windows executable, 
+respectably, which is executed and the user is guided through the installation.
 
 **TODO: add info on checksums? overkill?**
 
+Once you've followed the installation instructions the base conda environment
+will be activated by default when you open up a new terminal window. You can 
+see this by looking at your prompt which should be prefixed with `(base)` or
+`(anaconda3)`. You can deactivate the base environment by running 
+`conda deactivate` and re-activate it by running `conda activate`. Notice how
+your prompt changes as you do this.
 
 ### Updating conda
 
@@ -39,9 +76,16 @@ conda update conda
 
 ### Local UPPMAX conda
 
-On the UPPMAX clusters (e.g., )*rackham*, *bianca*, *snowy* and *irma*), `conda` is also available through the UPPMAX module system. This module provides a *local* variant of `conda`, that i, it accesses local mirrors of the major bioinformatics-relevant *conda* channels (including *anaconda*, *bioconda*, and *conda-forge*; for a full listing do `conda config show channels`).
+On the UPPMAX clusters (e.g., )*rackham*, *bianca*, *snowy* and *irma*), 
+`conda` is also available through the UPPMAX module system. This module provides
+a *local* variant of `conda`, that i, it accesses local mirrors of the major 
+bioinformatics-relevant *conda* channels (including *anaconda*, *bioconda*, and 
+*conda-forge*; for a full listing do `conda config show channels`).
 
-If your project involves human sensitive data and, hence, work on the secure cluster *bianca*, you will need to use this local `conda` module, as *bianca* does not have any internet connections. The UPPMAx local *cona* can be loaded (while on an UPPMAX cluster) simply by typing:
+If your project involves human sensitive data and, hence, work on the secure 
+cluster *bianca*, you will need to use this local `conda` module, as *bianca* 
+does not have any internet connections. The UPPMAx local *cona* can be loaded 
+(while on an UPPMAX cluster) simply by typing:
 
 `module load conda`
 
@@ -53,7 +97,9 @@ Unloading the module is done by:
 
 ### Finding a conda packages
 
-To find out if there exists a conda packages for a certain package, the easiest way is actually to google `conda <package name>`. Existing packages will have an *anaconda cloud* page for the package, which tells:
+To find out if there exists a conda packages for a certain package, the easiest 
+way is actually to google `conda <package name>`. Existing packages will have 
+an *anaconda cloud* page for the package, which tells:
 
 - which channel provides the packages
 - which systems the package is provided for, and
