@@ -64,7 +64,8 @@ will be activated by default when you open up a new terminal window. You can
 see this by looking at your prompt which should be prefixed with `(base)` or
 `(anaconda3)`. You can deactivate the base environment by running 
 `conda deactivate` and re-activate it by running `conda activate`. Notice how
-your prompt changes as you do this.
+your prompt changes as you do this. See [more below](#activating-and-deactivating-an-environment) 
+about activating and deactivating environments.
 
 ### Updating conda
 
@@ -120,7 +121,8 @@ search in several channels at the same time, e.g.,
 
 #### Searching on UPPMAX
 
-On UPPMAX, `conda` is set up to search *all* local channel mirrorss, by simply typing:
+On UPPMAX, `conda` is set up to search *all* local channel mirrors, by simply 
+typing:
 
 ```
 conda search <package>
@@ -128,7 +130,11 @@ conda search <package>
 
 ### Creating environment
 
-Conda environments can be created indifferent ways. Since reproducibility is a major theme for these crash courses, we will here focus on the approach where a conda environment file is used. Separate conda environemnts files are used for separate environments. The environment file should be in `yaml` format and can look like this:
+Conda environments can be created indifferent ways. Since reproducibility is a 
+major theme for these crash courses, we will here focus on the approach where a 
+conda environment file is used. Separate conda environemnts files are used for 
+separate environments. The environment file should be in `yaml` format and can 
+look like this:
 
 *file: smthg.yaml*
 ```
@@ -143,10 +149,18 @@ dependencies:
 ```
 
 Breaking down the content:
-- The `name` is the name you want to call the conda environment. This could be, e.g., the name of the contained software or of the project it will be used in.
-- Under `channels`, the channels that supply the required conda packages are listed. Several channels can be given, but it is good practice to only list those necessary -- avoid unnecessary safe-guarding!
-- Finally, the required conda packages are listed under `dependencies`. Also here, several packages can be listed in the same file. Conda usually makes a good job in taking care of any incompatibilities between packages, and warns if it fails doing this.   
-For reproducibility reasons it is good to also list the version of the software required. This is done by adding a ’=’ sign followed by the version (to find what versions are  as packages, `conda search` can be used, see above).
+- The `name` is the name you want to call the conda environment. This could be, 
+e.g., the name of the contained software or of the project it will be used in.
+- Under `channels`, the channels that supply the required conda packages are 
+listed. Several channels can be given, but it is good practice to only list 
+those necessary -- avoid unnecessary safe-guarding!
+- Finally, the required conda packages are listed under `dependencies`. Also 
+here, several packages can be listed in the same file. Conda usually makes a 
+good job in taking care of any incompatibilities between packages, and warns if 
+it fails doing this.   
+For reproducibility reasons it is good to also list the version of the software 
+required. This is done by adding a ’=’ sign followed by the version (to find 
+what versions are  as packages, `conda search` can be used, see above).
 
 The conda environment is then created by
 
@@ -154,11 +168,26 @@ The conda environment is then created by
 conda env create --file smthg.yaml
 ```
 
-This will ask you to verify the installation, then perform it and report success or failure. Reasons for failure is most often du to:
+This will ask you to verify the installation, then perform it and report 
+success or failure. Reasons for failure is most often due to:
 
-- the name of the environment is already in use -- change environment name or remove the old environment (see below).
-- A package is not available from the channel or not available for the platform (i.e., MacOS, Windows or Linux/Unix) -- correct channel or use another platform (e.g., UPPMAX).
-- Versions of two or more packages, as required in the conda environment yaml file, are not compatible -- try with other versions. For example, a common incompatibility is that one package is built for `python 2` and another is built for `python 3` -- these are not compatible.
+- the name of the environment is already in use -- change environment name or 
+remove the old environment (see below).
+- A package is not available from the channel or not available for the 
+platform (i.e., MacOS, Windows or Linux/Unix) -- correct channel or use another 
+platform (e.g., UPPMAX).
+- Versions of two or more packages, as required in the conda environment yaml 
+file, are not compatible -- try with other versions. For example, a common 
+incompatibility is that one package is built for `python 2` and another is built
+ for `python 3` -- these are not compatible.
+
+When setting up an environment for a new project it can be a good idea to 
+**not** set explicit versions for packages, unless you know beforehand that your
+project requires a specific version. This way you can let conda attempt to 
+install the most up to date compatible versions for the listed packages. Once 
+the environment is created you can update the environment file with the exact
+versions that were installed (use `conda list` to see package versions for the
+activated environment).
 
 ### Activating and deactivating an environment
 
@@ -168,13 +197,18 @@ A succesfully installed conda environment is activated by typing:
 conda activate smthg
 ```
 
-However, often `conda` will complain that it is not initiated for bash. this is done by typing:
+However, often `conda` will complain that it is not initiated for bash. this is 
+done by typing:
 
 ```
 conda init bash
 ```
 
-Then retry the activation command. Now you will have access to the programs provided by the conda environment. You will also have access to the standard programs of your system, but if you have the same program in your standard system and in your conda environment, the one in the conda environment will be used.
+Then retry the activation command. Now you will have access to the programs 
+provided by the conda environment. You will also have access to the standard 
+programs of your system, but if you have the same program in your standard 
+system and in your conda environment, the one in the conda environment will be 
+used.
 
 The conda environment is deactivated by typing:
 
@@ -182,13 +216,15 @@ The conda environment is deactivated by typing:
 conda deactivate
 ```
 
-The standard environment is then restored and the conda environment's software is not accessible.
+The standard environment is then restored and the conda environment's software 
+is not accessible.
 
 ### Updating an environment
 
 To add additional packages to an environment:
 
-1. First update the conda environment files in question by adding additional packages (and channels as needed) or change the version of existing packages.
+1. First update the conda environment files in question by adding additional 
+packages (and channels as needed) or change the version of existing packages.
 2. Then type:
 
 ```
