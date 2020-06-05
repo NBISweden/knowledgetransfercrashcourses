@@ -5,14 +5,13 @@
 - Maybe add rule to snakefile that downloads the reference (using wget) to 
 reduce repo size
 
-
 ## Prerequisites
 
 Please complete the [Git Crash Course](/GitCrashCourse/README.md), the [Conda
 Crash Course](TBA), and the [Tmux Crash Course](/TmuxCrashCourse/README.md)
 before continuing.
 
-## Introduction to Snakemake
+## Introduction
 
 Snakemake is a tool for designing and performing a workflows i.e., a sequence
 of individual steps, each running programs or scripts, that is required to

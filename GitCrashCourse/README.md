@@ -1,7 +1,9 @@
+# Git Crash Course
+
 **Todo:**  
   - Add info on how to apply for user account for, e.g., Bitbucket
 
-# A crash course to `git`
+## Introduction
 
 `git` is a version control system that can  be used to keep track
 of changes made to files during the development of a project. The
