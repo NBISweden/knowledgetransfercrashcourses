@@ -15,7 +15,7 @@ but that fails the *intuitive* criterium... and so does ’vim’:)
 - need feedback on how this works with Windows
 - [Snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html#installation-via-conda) recommends using the conda package `mamba` instead of plain `conda` (due to current problems with conda). Should this crash course follow that? I think `mamba` is meant to be a temporary fix so could be better to stick with `conda` to no over-complicate, but if it works better?
 
-## Introduction to `conda`
+## Introduction
 
 Conda is a cross-platform system for software package management.
 It greatly simplifies software installation on your computer.
