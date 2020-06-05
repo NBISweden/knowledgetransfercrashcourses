@@ -273,6 +273,10 @@ git git --version
 Then deactivate the environment.  
 Did it work? Did you get the right version?
 
-2. Use a text-editor and create your own conda environment file `bedtools yaml`, google or conda search to find a package for bedtools version x.y.z. and add that to the environment file. Create the envirnoment.,and check that it worked. deactivate
-3. add samtools to the environment file and update the environment file. check tha it worked and deactivate. Remove the environment.
-4. Clean your conda environment.
+2. Use a text-editor and create your own conda environment file `bedtools.yaml`,
+ google or conda search to find a package for bedtools version x.y.z. and add 
+ that to the environment file. Create the environment and activate it. Check
+ that you can run bedtools.
+3. Add `samtools` to the environment file and update the environment. Check 
+that it worked. 
+4. Deactivate and remove the environment.
