@@ -47,6 +47,11 @@ be due to the actual program being platform-specific, to difficulties to port
 the program between platforms or to channel policies (*bioconda* not supporting 
 Windows?).
 
+## Additional info
+There's also information about conda available in the **Tools in reproducible
+research** [course material](https://nbis-reproducible-research.readthedocs.io/en/latest/conda/).
+
+
 ## Installation
 
 Conda can be installed using the Miniconda installer. The installer is 
