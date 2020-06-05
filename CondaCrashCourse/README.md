@@ -242,20 +242,29 @@ Sometimes an outdated environment needs to be deleted. This is done by typing:
 conda env remove --name smthg
 ```
 
-`conda` then asks for verification, then deletes the environment and reports back.
+`conda` then asks for verification, then deletes the environment and reports 
+back.
 
 ### Keeping your conda clean
 
-By default, conda saves all downloaded software tarballs (archives of source code), redundant packages (e.g., older, replaced versions) and index-cache because, in case they are needed, it might save a little time not having to download/create them again. However, after some time all these saved files will make the conda-installation cluttered, taking up disk-space and possibly affecting performance. It is there a good practice to clean the conda installation from time to time. This done by typing:
+By default, conda saves all downloaded software tarballs (archives of source 
+code), redundant packages (e.g., older, replaced versions) and index-cache 
+because, in case they are needed, it might save a little time not having to 
+download/create them again. However, after some time all these saved files will 
+make the conda-installation cluttered, taking up disk-space and possibly 
+affecting performance. It is there a good practice to clean the conda 
+installation from time to time. This done by typing:
 
 ```
 conda clean --all
 ```
 
-`conda` asks for verification for cleaning, then perform the cleaning and reports back.
+`conda` asks for verification for cleaning, then perform the cleaning and 
+reports back.
 
 ## Exercises
-1. Create an environment using the file [git.yaml](../git.yaml). Activate the environment and test that you have access to the program by typing:
+1. Create an environment using the file [git.yaml](git.yaml). Activate the 
+environment and test that you have access to the program by typing:
 
 ```
 git git --version
