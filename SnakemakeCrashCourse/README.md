@@ -2,7 +2,7 @@
 
 **TODO**
 
-- Maybe add rule to snakefile that downloads the reference (using wget) to 
+- Maybe add rule to snakefile that downloads the reference (using wget) to
 reduce repo size
 
 ## Prerequisites
@@ -13,11 +13,26 @@ before continuing.
 
 ## Introduction
 
-Snakemake is a tool for designing and performing a workflows i.e., a sequence
-of individual steps, each running programs or scripts, that is required to
-convert some input, say, sequencing reads, to a desired output, say, read counts
-for individual genomic regions of interest. The workflow can be branching, 
-coalescing, and parts of it can be run in parallel.
+In many projects, the trajectory from raw data to final analysis results
+comprise several sequential analysis steps. For example, in a RNAseq analysis,
+this can include:
+
+- adaptor trimming.
+- mapping reads to genome,
+- estimating read coverage (counts) of featureCounts,
+- various QC steps, and
+- differential expression analysis
+
+This sequence of steps is usually called a workflow or a pipeline. Many of
+the steps are performed in the same way for different input samples, which
+could comprise a large number. It is therefore desirable to automatize that
+part of the workflow so that it can be easily repeated for all samples.
+
+Snakemake is a tool for designing and performing automated workflows i.e., a
+sequence of individual steps, each running programs or scripts, that is
+required to convert some input, say, sequencing reads, to a desired output, say,
+read counts for individual genomic regions of interest. The workflow can be
+branching, coalescing, and parts of it can be run in parallel.
 
 In one sense, a snakemake workflow can be viewed as just a glorified `bash`
 script performing the desired steps in sequence, but it provides a more
@@ -30,12 +45,18 @@ using snakemake. However, you can use python code snippets _almost_ anywhere in
 the Snakefile (see examples in the Mapping example Snakefile
 [mapping.smk](./mapping.smk)).
 
-The structure of the workflow is defined in [The Snakefile](#The\ Snakefile), 
-which uses  *wildcards* to provide a framework that is, more or less, *general* 
-for the intended data analysis task to be performed. This general framework is 
-then, typically, made more specific for the actual data and parameters at hand 
-by the arguments given when [Running snakemake](#Running\ Snakemake) and by 
-variable values set in [The configure files](#The\ configure\ files).
+The structure of the workflow, that is the different analysis steps to be run,
+is defined in [The Snakefile](#The\ Snakefile). By using a consistent system
+of naming the input and output of the different steps, these are connected
+so that the output of one analysis step is the input of the next analysis
+step. Moreover, by using *wildcards*  allows the same step be run on different
+inputs. The workflow can then be run all steps in on go or it is possible to
+run just part of the workflow by specifying the desired output as arguments
+when [Running snakemake](#Running\ Snakemake). It can also be modified to,
+e.g., different inuts, by the variable values set in
+[The configure files](#The\ configure\ files).
+
+The different parts that constitute a snakemake workflow are described below.
 
 ## The Snakefile
 
@@ -49,9 +70,9 @@ the Snakefile.
 
 The most important directives are the `output`, `input` and `shell` directives.
 Their use is described in the code snippet and the associated text below. In the
- code snippet, extensive *comments* (starting with a `#`) are used to explain 
- the *following* code line(s) (e.g., a directive). Notice that comments are 
- ignored (not executed) by snakemake when running the workflow (see further 
+ code snippet, extensive *comments* (starting with a `#`) are used to explain
+ the *following* code line(s) (e.g., a directive). Notice that comments are
+ ignored (not executed) by snakemake when running the workflow (see further
  [Comments in the code](#Comments\ in\ the\ code)).
 
 ```
@@ -93,29 +114,29 @@ rule sortAndIndex:
         """
 ```
 
-- The `output` directive describes what files the rule can produce, which, in 
-the example above, expands to the python dictionary 
+- The `output` directive describes what files the rule can produce, which, in
+the example above, expands to the python dictionary
 `{"bam": "mapped/{prefix}.bam", "bai": "mapped/{prefix}.bam.bai"}`.   
-- The `input` directive describes the input files the rule require to do it job, 
-which, in the example above, expands to the (single-itemed) python dictionary 
+- The `input` directive describes the input files the rule require to do it job,
+which, in the example above, expands to the (single-itemed) python dictionary
 `{"sam": "mapped/{prefix}.sam"}`.  
-- The `shell` directive, describes the bash commands used to produce the output 
-from the input. (Note, the `shell` directive can be replaced by the `script` or 
+- The `shell` directive, describes the bash commands used to produce the output
+from the input. (Note, the `shell` directive can be replaced by the `script` or
 `run` directives, which are not covered here.)
 
 Other important directives include
 
 - `params:` which can define other important parameters, typically _not_ files.
 
-- `log:` which defines a log file that can be used to capture `std output` 
+- `log:` which defines a log file that can be used to capture `std output`
 and`std error`.
 
-- `conda:` tells snakemake how create a conda environment providing programs 
+- `conda:` tells snakemake how create a conda environment providing programs
 required by the rule.
 
 - `group:` assigns a "cluster job group" to a rule.
 
-Examples on how these are used can be found below and in the Snakefile 
+Examples on how these are used can be found below and in the Snakefile
 [mapping.smk](/mapping.smk).
 
 
@@ -396,7 +417,7 @@ it will expand to 2h.
 
 #### The `sbatch` command
 
-The `sbatch` command is given as a quoted string with `snakemake` style 
+The `sbatch` command is given as a quoted string with `snakemake` style
 wildcards for the actual values of the `sbatch` option values:
 
 ```
@@ -408,16 +429,16 @@ wildcards for the actual values of the `sbatch` option values:
 There are numerous options to snakemake, but I will only list some of the most
 useful ones here:
 
-- `-n` dry-run; _always_ run a dry-run before the real run to avoid unpleasant 
+- `-n` dry-run; _always_ run a dry-run before the real run to avoid unpleasant
 surprises!
 
-- `-p` print shell commands that will be performed -- good for pre-checking and 
+- `-p` print shell commands that will be performed -- good for pre-checking and
 debugging rules
 
-- `-r` state reason for rerunning a rule -- again good for pre-checking and 
+- `-r` state reason for rerunning a rule -- again good for pre-checking and
 debugging
 
-- `-f` force a rerun of the (last) rule that that has the requested file as 
+- `-f` force a rerun of the (last) rule that that has the requested file as
 output -- sometimes needs doing!
 
 ### Wrapper script for Snakemake
@@ -457,25 +478,25 @@ Throughout all exercises, take a look at the Snakefile
 understand what they do and what happens when you run the commands in the
 exercises.
 
-0. If you have not already done so, fork the Crash Course Bitbucket repository 
-and then clone a git working directory (_gwd_), as described in the 
-[Git Crash course](../GitCrashCourse/README.md). To also appreciate 
-`snakemake`'s cluster capabilities you should do this on an UPPMAX cluster 
+0. If you have not already done so, fork the Crash Course Bitbucket repository
+and then clone a git working directory (_gwd_), as described in the
+[Git Crash course](../GitCrashCourse/README.md). To also appreciate
+`snakemake`'s cluster capabilities you should do this on an UPPMAX cluster
 login-node (e.g., rackham), but you can run on your laptop as well.
-1. Create a *Analysis working directory* (`awd`) --- this should be different 
+1. Create a *Analysis working directory* (`awd`) --- this should be different
 and outside the git working directory (`gwd`) -- and `cd` into `awd`.
 
-2. Run `snakemake` from `awd` to create the output file `fastq/s1_R1.fastq.gz`. 
+2. Run `snakemake` from `awd` to create the output file `fastq/s1_R1.fastq.gz`.
 Do not run it as a cluster job or use the wrapper script `doMapping.sh` yet, but
-think about what minimum options are needed. (Tip: It's good practice to do a 
+think about what minimum options are needed. (Tip: It's good practice to do a
 dry-run first to check check what happens and if all options are set correctly.)  
 What files were created? Why?
 
-3. Use the `doMapping.sh` wrapper script and run `snakemake` without a output 
+3. Use the `doMapping.sh` wrapper script and run `snakemake` without a output
 file argument.  
 What samples did you get final output files for? Why?
 
-4. Update the workflow so that final output files also for a sample named `s2`, 
+4. Update the workflow so that final output files also for a sample named `s2`,
 is produced; use input fastq `SRR3222412-19_1.fq.gz` and `SRR3222412-19_1.fq.gz`
 in the [Example Data directory](../ExampleData/README.md) for `s_2`. Then rerun
 the command used in 3. (Tip: Edit the *local* config files in `awd` -- not those
@@ -485,9 +506,9 @@ Did it work? Were all samples run?
 
 ### Extra-curricular exercise
 
-5. Add a rule that uses the program `featureCount` to summarize the read counts 
-on the different features of the genome annotation file 
-[../ExampleData/Mus_musculus.GRCm38.99.chromosome.19.gtf.gz](../ExampleData/annotation/README.md). 
+5. Add a rule that uses the program `featureCount` to summarize the read counts
+on the different features of the genome annotation file
+[../ExampleData/Mus_musculus.GRCm38.99.chromosome.19.gtf.gz](../ExampleData/annotation/README.md).
 The relevant shell command for featureCount would be:
 
         featureCounts -g gene_id -t exon -s 1 -R BAM -a {input.gtf} -o {output.counts} {input.bam}  
