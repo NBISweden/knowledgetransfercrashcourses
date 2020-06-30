@@ -13,7 +13,7 @@ before continuing.
 
 ## Introduction
 
-In many projects, the trajectory from raw data to final analysis results
+In many projects, the process of going raw data to final analysis results
 comprise several sequential analysis steps. For example, in a RNAseq analysis,
 this can include:
 
@@ -23,38 +23,51 @@ this can include:
 - various QC steps, and
 - differential expression analysis
 
-This sequence of steps is usually called a workflow or a pipeline. Many of
-the steps are performed in the same way for different input samples, which
-could comprise a large number. It is therefore desirable to automatize that
-part of the workflow so that it can be easily repeated for all samples.
+This sequence of steps is usually called a *workflow* or a *pipeline*.
+Typically, a majority of the steps are performed in the same way for the
+different input samples, which often can constitute a large number. It is
+therefore desirable to automatize the workflow so that that type of common
+steps can be easily repeated for all samples.
 
-Snakemake is a tool for designing and performing automated workflows i.e., a
-sequence of individual steps, each running programs or scripts, that is
-required to convert some input, say, sequencing reads, to a desired output, say,
-read counts for individual genomic regions of interest. The workflow can be
-branching, coalescing, and parts of it can be run in parallel.
+**Snakemake** is a tool for designing and performing automated workflows,
+i.e., a sequence of individual steps (each running dedicated programs or
+scripts) that is required to convert some input, say, sequencing reads,
+to a desired output, say, read counts for individual genomic regions of
+interest. The workflow can be branching, coalescing, and parts of it can
+be run in parallel, typically on a high-performance computer (HPC) cluster.
 
-In one sense, a snakemake workflow can be viewed as just a glorified `bash`
-script performing the desired steps in sequence, but it provides a more
-structured layout and is more flexible and easier to rerun/reuse.
+If you already shave used dedicated `bash` scripts that run various scripts
+on your data in the right order, then, in one sense, a snakemake workflow can
+be viewed as just a glorified version of such of`bash` script. However,
+snakemake provides a more structured layout and is more flexible and easier
+to rerun/reuse.
 
-In another sense, snakemake could be described as "_python_ with inspiration
-from the _make_ program". However, the basic snakemake rule syntax is not so
-very much python... and you definitely don't need to be a python expert to start
-using snakemake. However, you can use python code snippets _almost_ anywhere in
+The structure of the workflow, that is, the different analysis steps to be run,
+is defined in [The Snakefile](#The\ Snakefile). In the Snakefile, each step
+in the pipeline is performed by, so-called, *rules*. Each rule can be viewed
+as corresponding to a good cooking recipe; it states what the *output* should
+be (e.g., a meringue), what *input* is required (egg-white and sugar) and what
+actions are needed to obtain the output from the input (use a mixer
+to whip the egg-whites, add the sugar and bake in oven). In a bioinformatics
+pipeline, the output and the input would both be files and the actions would,
+e.g., be shell commands (the mixer and the oven could be thought of as
+representing other programs or scripts that are called).
+
+By using a consistent system of naming the input and output of the different
+steps, these are connected so that the output of one analysis step is the input
+of the next analysis step. Moreover, by using *wildcards*  allows the same step
+be run on different inputs. The workflow can then be run all steps in on go or
+it is possible to run just part of the workflow by specifying the desired output
+as arguments when [Running snakemake](#Running\ Snakemake). It can also be
+modified to, e.g., different inuts, by the variable values set in
+[The configure files](#The\ configure\ files).
+
+Sometimes, snakemake are described as "_python_ with inspiration from the
+_make_ program". However, the basic snakemake rule syntax is not so very much
+python... and you definitely don't need to be a python expert to start using
+snakemake. However, you _can_ use python code snippets _almost_ anywhere in
 the Snakefile (see examples in the Mapping example Snakefile
 [mapping.smk](./mapping.smk)).
-
-The structure of the workflow, that is the different analysis steps to be run,
-is defined in [The Snakefile](#The\ Snakefile). By using a consistent system
-of naming the input and output of the different steps, these are connected
-so that the output of one analysis step is the input of the next analysis
-step. Moreover, by using *wildcards*  allows the same step be run on different
-inputs. The workflow can then be run all steps in on go or it is possible to
-run just part of the workflow by specifying the desired output as arguments
-when [Running snakemake](#Running\ Snakemake). It can also be modified to,
-e.g., different inuts, by the variable values set in
-[The configure files](#The\ configure\ files).
 
 The different parts that constitute a snakemake workflow are described below.
 
@@ -62,21 +75,25 @@ The different parts that constitute a snakemake workflow are described below.
 
 The cornerstone of snakemake is the Snakefile, which defines the workflow steps.
 Each step is coded as a (usually) named `rule` and comprise a number of
-`directives`, described below. Additionally, commands defining configure-files,
-import of python modules or definition of python functions can be included in
-the Snakefile.
+`directives` (e.g., `output`, `input` and `shell`), described below.
+Additionally, commands defining configure-files, import of python modules or
+definition of python functions can be included in the Snakefile.
 
 ### Directives
 
 The most important directives are the `output`, `input` and `shell` directives.
-Their use is described in the code snippet and the associated text below. In the
- code snippet, extensive *comments* (starting with a `#`) are used to explain
- the *following* code line(s) (e.g., a directive). Notice that comments are
- ignored (not executed) by snakemake when running the workflow (see further
- [Comments in the code](#Comments\ in\ the\ code)).
+These descibe which output files will be produced, which input files are needed
+and what `bash` commands (e.g., calls to programs) are needed to produce the
+output from the input. Their use in the Snakefile is described in the code
+snippet and the associated texts below. In the code snippet, extensive 
+*comments* (starting with a `#`) are used to explain the *following* code
+line(s) (e.g., a directive). Notice that comments are ignored (not executed)
+by snakemake when running the workflow (see further
+[Comments in the code](#Comments\ in\ the\ code)).
 
 ```
-# Notice that a colon (:) is required after the rule and the directives
+# This is how a rule is written in the Snakefile. Notice that a
+# colon (:) is required after the rule name and after the directives
 # (compare python style function definitions)
 rule sortAndIndex:
 
@@ -103,7 +120,6 @@ rule sortAndIndex:
     # quotes for code blocks and single quotes for single lines).
     shell:
         """
-        exec &> {log.log}
         echo "Create backup"
 
         echo "Creating sorted and indexed bam"
