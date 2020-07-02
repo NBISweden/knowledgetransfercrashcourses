@@ -67,7 +67,8 @@ _make_ program". However, the basic snakemake rule syntax is not so very much
 python... and you definitely don't need to be a python expert to start using
 snakemake. However, you _can_ use python code snippets _almost_ anywhere in
 the Snakefile (see examples in the Mapping example Snakefile
-[mapping.smk](./mapping.smk)).
+[mapping.smk](./mapping.smk)). In the text and examples below, similarities
+with python will be indicated, but can mostly be ignored.
 
 The different parts that constitute a snakemake workflow are described below.
 
@@ -75,20 +76,21 @@ The different parts that constitute a snakemake workflow are described below.
 
 The cornerstone of snakemake is the Snakefile, which defines the workflow steps.
 Each step is coded as a (usually) named `rule` and comprise a number of
-`directives` (e.g., `output`, `input` and `shell`), described below.
+`directives` (such as `output`, `input` and `shell`), which are described below.
 Additionally, commands defining configure-files, import of python modules or
 definition of python functions can be included in the Snakefile.
 
 ### Directives
 
 The most important directives are the `output`, `input` and `shell` directives.
-These descibe which output files will be produced, which input files are needed
+These descibe which output files will be produced, which input files are needed,
 and what `bash` commands (e.g., calls to programs) are needed to produce the
-output from the input. Their use in the Snakefile is described in the code
-snippet and the associated texts below. In the code snippet, extensive 
-*comments* (starting with a `#`) are used to explain the *following* code
-line(s) (e.g., a directive). Notice that comments are ignored (not executed)
-by snakemake when running the workflow (see further
+output from the input, respectively. Their use in the Snakefile is described
+in the code snippet and the associated texts below, which is designed to
+convert a sam file to a bam-file.   
+In the code snippet, extensive *comments* (starting with a `#`) are used to
+explain the *following* code line(s) (e.g., a directive). Notice that comments
+are ignored (not executed) by snakemake when running the workflow (see further
 [Comments in the code](#Comments\ in\ the\ code)).
 
 ```
@@ -97,27 +99,28 @@ by snakemake when running the workflow (see further
 # (compare python style function definitions)
 rule sortAndIndex:
 
-    # The output directive is a (possibly nested) list of desired
-    # output files, the list items can be named (notice that commas
-    # are required between list items). The output directive defines
-    # wildcards inside curly brackets {}; the value of the wildcards
-    # is determined when the rule is called either from command-line
-    # or by another rule (more about this below). If an output folder
-    # (here "mapped" is missing, snakemake creates it automatically.)
+    # The output directive comprise a list of desired output files,
+    # the list items can conveniently be named (notice that commas are
+    # required between list items). The output directive defines wildcards
+    # inside curly brackets {}; the value of the wildcards is determined #
+    # when the rule is called either from command-line or by another rule
+    # (more about this below). If an output folder (here "mapped") is
+    # missing, snakemake will create it automatically.)
     output:
         bam = "mapped/{prefix}.bam",
         bai = "mapped/{prefix}.bam.bai"
 
-    # The input directive is a (possibly nested) list of required
-    # input files, the list items can be named (notice that commas
-    # are required between list items). It often contains the wildcards
-    # defined in the output directive.       
+    # The input directive is a list of required input files, the list
+    # items can be named (notice that commas are required between list
+    # items). It often contains the wildcards defined in the output
+    # directive, and will be substituted for its determined value
     input:
         sam = "mapped/{prefix}.sam",
 
-    # The shell minimally contains the bash commands needed to
-    # convert input to output.  The code should be quoted (use triple
+    # The shell directive minimally contains the bash commands needed to
+    # convert the input to the output.  The code must be quoted (use triple
     # quotes for code blocks and single quotes for single lines).
+    # Informative messages to the user can be included.
     shell:
         """
         echo "Create backup"
@@ -130,9 +133,9 @@ rule sortAndIndex:
         """
 ```
 
-- The `output` directive describes what files the rule can produce, which, in
+- The `output` directive describes what files the rule will produce, which, in
 the example above, expands to the python dictionary
-`{"bam": "mapped/{prefix}.bam", "bai": "mapped/{prefix}.bam.bai"}`.   
+`{"bam": "mapped/{prefix}.bam", "bai": "mapped/{prefix}.bam.bai"}`.  "{prefix}" is a wildcard (see further [Wildcards and connecting rules](#Wildcards\ and\ connecting\ rules))
 - The `input` directive describes the input files the rule require to do it job,
 which, in the example above, expands to the (single-itemed) python dictionary
 `{"sam": "mapped/{prefix}.sam"}`.  
@@ -145,12 +148,12 @@ Other important directives include
 - `params:` which can define other important parameters, typically _not_ files.
 
 - `log:` which defines a log file that can be used to capture `std output`
-and`std error`.
+and`std error` from the commands used.
 
-- `conda:` tells snakemake how create a conda environment providing programs
-required by the rule.
+- `conda:` tells snakemake how create a conda environment providing the
+programs required by the rule (see further [Using conda environments](#Using\ conda\ environments)).
 
-- `group:` assigns a "cluster job group" to a rule.
+- `group:` assigns a "cluster job group" to a rule (see further [Cluster jobs, groups, and localrules](#Cluster\ jobs,\ groups,\ and\ localrules))
 
 Examples on how these are used can be found below and in the Snakefile
 [mapping.smk](/mapping.smk).
@@ -158,23 +161,25 @@ Examples on how these are used can be found below and in the Snakefile
 
 ### Wildcards and connecting rules
 
-If `snakemake` is run, with a Snakefile including the rule above, and requesting
-the output `mapped/mysample.bam` , then `snakemake` will first check that the
-requested output file does not already exists, in which case it reports this and
-stops. Otherwise, it will parse the Snakefile looking for a rule with output
-that matches the required output `mapped/mysample.bam`. It will find that the
-rule `sortAndIndex` matches if wildcard `"{sample}"` is defined to be
-`"mysample"`, so it defines the wildcard `"{sample}" = "mysample"`and prepares
-to run the rule.
+If `snakemake` is run, with a Snakefile including the rule above, and requesting the output `mapped/mysample.bam` (see further
+[Running Snakemake](#Running\ Snakemake)), then `snakemake` will first
+check that the requested output file does not already exists, in which
+case it reports this and stops.  
+Otherwise, it will parse the Snakefile looking for a rule with output
+that matches the required output `mapped/mysample.bam`. It will find that
+the rule `sortAndIndex` (that was shown above) matches if wildcard
+`"{sample}"` is defined to be `"mysample"`, so it defines the wildcard
+`"{sample}" = "mysample"`and prepares to run the rule.
 
-It will then look for its input file required by the rule, which after expanding
-the wildcard becomes `mapped/mysample.sam`; if this file exists, snakemake will
-use this file as the input, Otherwise, it will look for another rule with an
-output matching `mapped/mysample.sam`and run this other rule to create the
-input. If you study the workflow in [mapping.smk](./mapping.smk), you will see
-that different rules have matching output and input; this behaviour creates a
-sequence of rules to be run to create `mapped/mysample.bam` -- a *workflow*!.
-(Can you see which rule in [mapping.smk](./mapping.smk) matches the output
+It will then look for its input file required by the rule, which after
+expanding the wildcard becomes `mapped/mysample.sam`; if this file exists,
+snakemake will use this file as the input, Otherwise, it will look for
+another rule with an output matching `mapped/mysample.sam`and run this
+other rule to create the input. If you study the workflow in the
+Snakefile [mapping.smk](./mapping.smk), you will see that different rules
+have matching output and input; this behaviour creates a sequence of rules
+to be run to create `mapped/mysample.bam` -- a *workflow*!. (Can you see
+which rule in [mapping.smk](./mapping.smk) matches the output
 `"mapped/mysample.sam"`? What is its input after expanding the wildcard?).
 
 ### Rule order and the Target rule
@@ -186,35 +191,62 @@ that only has an input directive comprising the desired final output files (see
 example in [mapping.smk](./mapping.smk)).
 
 With the exception of the Target rule, rules can be written in any order in the
-snakefile. It makes sense to have them in 'chronological' order, i.e., the order
-they are expected to be executed.
+Snakefile. It makes sense to have them in 'chronological' order, i.e., the order
+they are expected to be executed. Most people will find it easier to read the
+Snakefile in such an order.
 
 The workflow in [mapping.smk](./mapping.smk) is set up to analyze a
 single sample by first soft-link the external files (fastq-file and reference
-genome fasta file) needed into the analysis directory, map all reads in the
-fastq file the reference genome, and finally sorting and indexing the resulting
-bam-file. We can run the full workflow for a single sample, _s1_, by setting the
-final indexed bam-file  (`mapped/s1.bam.bai`) as the  argument of `snakemake`.
-However, if we list the output files from the final rule (i.e., the indexed
-bam-files) for all samples in the Target rule, just running `snakemake` without
-argument will go through the full workflow for all samples.
+genome fasta file) needed into the analysis directory, then map all reads in
+the fastq file to the reference genome, and finally sorting and indexing the
+resulting bam-file. We can run the full workflow for a single sample, _s1_, by
+setting the final indexed bam-file  (`mapped/s1.bam.bai`) as the  argument of
+`snakemake`. However, if we list the output files from the final rule (i.e.,
+the indexed bam-files) for all samples in the Target rule, just running
+`snakemake` without argument will go through the full workflow for all samples.
 
 
 ### Cluster jobs, groups, and localrules
 
-When run on a cluster (see below and in `doMapping.sh`), by default, each rule
-will be run as a separate job. However, if a few sequential rules each takes
-less than, say, 15 min and all uses the same amount of resources (memory or
-cpus/threads), then these could be sent as one single job by assigning them the
-same *group name* using the directive `group`, see example below. Moreover, if
-some jobs are ridiculously short (e.g., soft-linking external files), these can
-be run on the login node by listing them as `localrules` (see example in
-[mapping.smk](./mapping.smk)).
+When run on a cluster (see  [Running Snakemake](#Running\ Snakemake) and in
+the wrapper file `doMapping.sh`), then by default, each rule will be run as a
+separate job. However, if a few sequential rules each takes short time, say,
+less than 15 min and all uses the same amount of resources (memory or
+cpus/threads), then these should be sent as one single job by assigning
+them the same *group name* using the directive `group`, see example below.
+```
+rule sort:
+    output:
+        bam = "mapped/{prefix}.bam"
+    input:
+        sam = "mapped/{prefix}.sam"
+    group: sortAndIndex
+    shell:
+        """
+        echo "Creating sorted bam"
+        samtools sort {input.sam} -o {output.bam}
+        """
 
-### Using `conda` environments
+rule index:
+    output:
+        bai = "mapped/{prefix}.bam.bai"
+    input:
+        bam = "mapped/{prefix}.bam"
+    group: sortAndIndex
+    shell:
+        """
+        samtools index {input.bam}
+        """
+```
+
+Moreover, if some jobs are ridiculously short (e.g., soft-linking external
+files), these can be run on the login node by listing them as `localrules`
+(see example in [mapping.smk](./mapping.smk)).
+
+### Using conda environments
 
 A very nice feature of `snakemake` is that it automatizes the use of software
-environments, either using `conda`  or as container (not treated here), on a
+environments, either using `conda`  or using *containers* (not treated here), on a
 rule-based basis. To obtain this:
 
 1. first create a conda environment yaml-file, including the software, required
@@ -224,7 +256,7 @@ course](TBA)).
 2. Add the `conda` directive to the rule definition, e.g.,  
 
 ```
-rule index:
+rule sortAndIndex:
     output:
         bai = "mapped/{prefix}.bam.bai"
     input:
@@ -241,9 +273,9 @@ rule index:
         """
 ```
 
-When running this rule with the option `--use-conda` snakemake will first create
-the conda environment (if not already existing) and then activate it before
-executing `shell` commands of the rule.
+When running this rule with the option `--use-conda` snakemake will first
+create the conda environment (if not already existing) and then activate
+it before executing `shell` commands of the rule.
 
 ### Comments in the code
 
@@ -256,26 +288,28 @@ Comments can be added in either of the following ways:
   brackets as variables, which can lead to errors.
 
 - `'''...'''` Everything between triplicated single quotes will be ignored by
-  snakemake. This will prevent variable expansions, so use this to comment out
+  snakemake. This should prevent variable expansions, so use this to comment out
   code, etc.
 
 
 ## The configure files
 
-It is convenient to define variables, including external input data, in a
-configure file. There are two variants of config files.
+It is convenient to define input variables, including external input data, in a
+configure file, instead of hard-coding them in the Snakfile. There are two
+variants of config files.
 
 ### _Standard_ configure files in yaml or json format
 
 The _standard_ configure files can be in yaml-format or json format. An
 advantage of the yaml format is that it is quite similar to the directive syntax
-in snakemake; however, a really annoying drawback is that indentations _must be
-as spaces and not as ASCII tab-characters_. Many, but not all, text editors
-handles this correctly, however, i.e., when you hit the tab-key it will insert a
-sequence of spaces instead of the ASCII tab character (I use emacs with a yaml
-mode; atom is quite nice and at least have a function for converting tabs to
-spaces). The json format is more strongly typed; it uses brackets and commas
-instead of indentations and requires all strings to be quoted; also, it does not
+in snakemake; a really annoying drawback is that indentations _must be as spaces
+and not as ASCII tab-characters_. However, many (but not all) text editors
+handles this `tabs-as-spaces` requirement quite well; that is, when you hit
+the tab-key it will insert a sequence of spaces instead of the ASCII tab
+character ([Atom](https://github.com/atom/atom]) is quite easy, free,
+multi-platform editor that can handle this issue).  
+The json format is more strongly typed; it uses brackets and commas instead
+of indentations and requires all strings to be quoted; also, it does not ¨
 support comments.
 
 - yaml example
@@ -317,9 +351,12 @@ configfile: "mappingConfig.yaml"
 
 either of the configure file examples above will be expand to the same python
 dictionary, which can be accessed by `config["variablename"]`. Thus,
-`config["variable1"]` will expand to 17, `config["variable2"]` expands to the
-python list `["value1", "value2"]`, and `config["variable3"]["key1"]` expand to
-`"value1"` (see further [mappingConfig.yaml](./mappingConfig.yaml)).
+
+- `config["variable1"]` will expand to 17,
+- `config["variable2"]` expands to the python list `["value1", "value2"]`, and
+- `config["variable3"]["key1"]` expand to`"value1"`
+
+(see further [mappingConfig.yaml](./mappingConfig.yaml)).
 
 ### _Tabular_ configure files in spreadsheet text format
 
@@ -328,11 +365,12 @@ configuration variables, the standard configure file can become rather messy and
 cumbersome. In such a case, it may be better to use a _tabular_ configure file.
 This is essentially a spreadsheet, but it must be in a text file format (not MS
 Excel, MacOSX Numbers, etc.). This text file format could be tab-delimited
-(`.tsv`) or comma-demimited (`.csv`); `snakemake` uses pythons pandas module
-which determines the delimiter automatically. (*__NB!__ Unfortunately, this does
-not, currently, seem to work seamlessly in pandas. Below, I have, instead,
-manually set the separator to be either tab or comma. Unfortunately, this
-precludes using, e.g., commas inside fields.*)
+(`.tsv`) or comma-delimited (`.csv`); `snakemake` uses pythons pandas module
+which determines the delimiter automatically. (*__NB!__ Unfortunately, this
+'automatical delimiter recognition' does not, currently, seem to work
+seamlessly in pandas. Below, I have, instead, manually set the separator to
+be either tab or comma. Unfortunately, this precludes using, e.g., commas
+inside fields.*)
 
 A tabular configure file could look as follows.
 
@@ -350,13 +388,17 @@ import pandas as pd
 samples = pd.read_csv("tabularSamples.tsv", sep = "[\t,]", comment="#").set_index("sample")
 ```
 
-each column can then be accessed in the Snakefile as a dictionary indexed by the
-sample name, e.g.,:
+each column can then be accessed in the Snakefile as a python dictionary
+indexed by the sample name, e.g.,:
 
 `samples["fastq"]["sq"]` expands to `"/crex/path/to/s1.fastq"` and
 `samples["reads"]` expands to `"[70,71]"`.
 
 ## Running Snakemake
+*Here we go through how to run snakemake in detail. However, to simplify
+running workflows, it is recommended to use a
+[Snakemake wrapper script](#Wrapper\ script\ for\ Snakemake) as described
+at the end of this section.*
 
 Simply typing `snakemake` on the command line (given that snakemake is installed
 on the system), will start snakemake and look for a Snakefile in the present
@@ -380,6 +422,9 @@ output of the rule and sample as a file argument:
 snakemake -s path/to/Snakefile path/to/requested/outputfile
 ```
 
+It is therefore good to practice reading Snakefiles, so one can identify
+output files from the output directive of different rules.
+
 ### Using `conda` environments
 
 Activating the use of `conda` environments, for rules with `conda` directives,
@@ -391,10 +436,10 @@ snakemake -s path/to/Snakefile --use-conda path/to/requested/outputfile
 
 ### Running on a Cluster
 
-**Important:** Snakemake should always be started in a *virtual terminal*
-(see further the TmuxCrashCourse.md) on the *login node*. Snakemake will
-then, based on the Snakefile, determine jobs and send them to the cluster.
-*You do not need to manually submit jobs!*
+**Important:** When on a cluster, such as UPPMAX, snakemake should always be
+started in a *virtual terminal* (see further the TmuxCrashCourse.md) on the
+*login node*. Snakemake will then, based on the Snakefile, determine jobs and
+send them to the cluster. *You do not need to manually submit jobs!*
 
 To run snakemake in parallel on UPPMAX, the following options are used:
 
@@ -406,17 +451,21 @@ To run snakemake in parallel on UPPMAX, the following options are used:
 #### The cluster config file
 
 The yaml-formatted cluster-config file defines values for the various `sbatch`
-options (see [UPPMAX `slurm` user guide](https://www.uppmax.uu.se/support/user-guides/slurm-user-guide/)), e.g.,
+options (see [UPPMAX slurm user guide](https://www.uppmax.uu.se/support/user-guides/slurm-user-guide/)), e.g.,
 
 ```
+# First define a default setting
 __default__ :
   name: default            # name of job shown in, e.g., jobinfo
   account: snicXXX-YYY     # Uppmax account to use
-  time: 0-02:00:00         # Allocated time
+  time: 0-00:30:00         # Allocated time
   partition: core          # Type of computational unit allocated, core or node
   n: 1                     # Allocated number of computational units
   other: "--mail-user your@email --mail-type=FAIL,STAGEOUT" # email are sent to this address on failed jobs
 
+# Certain rules may need more resources, e.g., time. Define a specific
+# setting for these, with the same name as the rule, and change only the
+# setting that must be different from the default.
 mapAndFilter:
   name: mapAndFilter
   time: 0-01:30:00
@@ -439,6 +488,8 @@ wildcards for the actual values of the `sbatch` option values:
 ```
 " sbatch -J {cluster.name} -A {cluster.account} -p {cluster.partition} -n {cluster.n} -t {cluster.time} {cluster.other}"
 ```
+The wildcards will be substituted for the corresponding setting in the cluster
+config file (e.g., `{cluster.partition} = core`)
 
 ### Other very useful options
 
@@ -455,7 +506,7 @@ debugging rules
 debugging
 
 - `-f` force a rerun of the (last) rule that that has the requested file as
-output -- sometimes needs doing!
+output -- sometimes needs doing, but don't use as default!
 
 ### Wrapper script for Snakemake
 
@@ -466,13 +517,14 @@ When a lot of the `snakemake` options above are used, the command-line call to
 snakemake -s path/to/Snakefile --use-conda --cluster-config pathe/to/cluster-config-file -- cluster " sbatch -J {cluster.name} -A {cluster.account} -p {cluster.partition} -n {cluster.n} -t {cluster.time} {cluster.other}" -p -r -n path/to/requested/outputfile
 ```
 
-Therefore it is convenient and recommended to use a convenience *wrapper script*
-that encapsulates, i.e., hides, all the absolutely necessary options. The
-wrapper script is designed so that other, not encapsulated, options (e.g., `-n`)
-can be passed to the wrapper script and it will be passed on to snakemake. This
-wrapper script is then called instead of `snakemake`. An example wrapper script
-can be found in [doMapping.sh](./doMapping.sh), which also contain some
-additional convenience items.
+Therefore, it is convenient and recommended to use a convenience *wrapper
+script*, typically a bash script, that encapsulates, i.e., hides, all the
+absolutely necessary options. The wrapper script is designed so that other,
+not encapsulated, options (e.g., `-n`) can be passed to the wrapper script
+and it will be passed on to snakemake. This wrapper script is then called
+instead of `snakemake`. An example wrapper script can be found in
+[doMapping.sh](./doMapping.sh), which also contain some additional
+convenience items.
 
 If we use this wrapper script, the call above simplifies to
 
