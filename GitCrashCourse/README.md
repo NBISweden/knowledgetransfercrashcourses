@@ -1,7 +1,30 @@
 # Git Crash Course
 
 **Todo:**  
-  - Add info on how to apply for user account for, e.g., Bitbucket
+  - Add info on how the repo looks on, e.g., Bitbucket, code, branches, etc.
+  - Should we have the
+
+## Why should I use it?
+`git` is one of the essential corner-stone for reproducible research.
+Not only does it provide a backup for all your code, but it also keeps
+track of the changes you make. So in the not uncommon case you make a
+lot of inspired changes to a script that in hind-sight turned out not
+to be so brilliant, you can easily go back and retrieve your latest
+working version of that script and continue from there.
+
+But there is more. You can develop your code on your laptop, and then
+when you need to run it large-scale on a cluster, `git` allows you
+create a synchronized clone on the cluster and you can continue
+developing the code there... or in both places. In fact, if you want
+to get advanced, `git` provides means for several collaborators
+to develop on the same code on different computers.
+
+Finally, it also mediates sharing the final code publicly , e.g., to
+article reviewers etc. It is even possible to automatically create a
+nice web-interface to the code.
+
+This course covers only the basic features of `git`. To learn more
+advanced issues, toyou can look at some of the
 
 ## Introduction
 
@@ -12,9 +35,9 @@ repository can be shared with others, either as a _public_ repository
 or as a with selected users as a _private_ repository. Several users
 can participate in the development simultaneously and independently.
 
-`git` projects are often the development of code of some software,
-but can also be, e.g., manuscript writing, typically in LaTex
-(but maybe not in, e.g., MS word, see next subsection).
+`git` projects are often used in the development of code of some
+software, but can also be, e.g., manuscript writing, typically in
+LaTex (but maybe not in, e.g., MS word, see next subsection).
 
 __Files for which `git` version control does not work so well__
 
@@ -30,27 +53,57 @@ course works.
 adding very large files to a git repository as this might crash the
 repository. Formally, files over 50Mb are considered very large;
 however, it's good practice to try to keep file sizes much
-smaller. There are ways around this if really needed, but
+smaller. For this reason, data files are typically _not_ included in
+git repostiories. There are ways around this if really needed, but
 large files should generally be avoided.
 
 I will below assume that you work on a computer where you can
-open a unix-like terminal (either your laptop or UPPMAX). In
-fact, all commands in the rest of this text assumes that you
-work in such a terminal and that you have _some_ experience
+open a unix-like terminal (either your laptop or an UPPMAX login
+server). In fact, all commands in the rest of this text assumes that
+you work in such a terminal and that you have _some_ experience
 using it.
 
-## What about Github and Bitbucket?
-The central repository (or _repo_ for short) can be on a local
-server or laptop, but it is always much better to keep it at
-some repository service provider. There are several such providers,
-Github, Bitbucket, Gitlab, etc.; the choice of which to use is
-almost arbitrary (google to find out more).
-_NBIS conflicts_ has an professional account with Bitbucket,
-which is why we use it in this project.
+## What about GitHub, GitLab and Bitbucket?
+The central repository (or _repo_ for short) can be on a local server
+or laptop, but it is always much better to keep it at some repository
+service provider. There are several such providers, the most common are
+Github, Bitbucket, and Gitlab. All of these offer free accounts that provide
+you with your own user-name and a password and allows you to create
+repositories or download from public repositories. There are some, more
+or less, subtle differences between these providers (see, e.g., discussions
+[here](https://www.gangboard.com/blog/github-vs-gitlab-vs-bitbucket)),
+but the choice of which to use is almost arbitrary. _NBIS lts_ has a professional
+(paid) account with Bitbucket, which is why we use it in this project.
 
-You will, most likely, need to apply for an an account to the
-central repository you choose to use. This is free and will
-provide you with your own user-name and a password.
+You will (almost certainly) need to apply for an an account to the
+central repository you choose to use; here follows links to the account
+application pages for [GitHub](https://github.com/join),
+[Bitbucket](https://id.atlassian.com/signup?application=bitbucket&continue=https://bitbucket.org/account/signin/?optintocst=1&next=/?aidsignup=1),
+[GitLab](https://gitlab.com/users/sign_up?test=capabilities).
+
+#### What does a repo look like on its webpage?
+The exact design will vary a little among different providers, but typically
+you will start at the _code_ or _source_ tab of the repo.
+
+1. At or near the top the repo's _name_ is given.
+2. Either below that or in the sidebar, there will be links to
+different _repo tabs_ -- you will most often need the _code__/_source_
+tab.
+3. Below that there is a roll-down menu with the available
+[branches]()#create-a-new-branch)in the repo; typically you are interested
+in the _master_ branch.
+4. Next, the fie and folder content of the repository is listed.
+5. Below that, the content of the README in the top repo folder is shown.
+This README file (typically in _markdown_-format, _.md_) contains a
+description of the repo provided by the owner.
+6. Lastly, but perhaps most importantly, you will find, somewhere at
+the top wright of the page, a roll-down menu button named _Code_ or
+_Clone_ that is the key to your access to the repo code (see further
+[below](#cloning-a-repository-git-clone))
+
+By clicking on a file (in _5_), you can display its content. Similarly,
+clicking on a subfolder opens a new webpage displaying the subfolder's
+content essentially in the same manner as described above.
 
 ## Installing `git`
 
@@ -66,16 +119,20 @@ to see what versions are available, in that case.
 
 ### Other Unix/Linux
 
-Most Unix/Linux systems probably provides `git` through their installer (`apt-get`, `yum`, etc.). See [here](https://www.atlassian.com/git/tutorials/install-git#linux) for an installation tutorial (if needed, scroll down to Linux).
+Most Unix/Linux systems probably provides `git` through their installer
+(`apt-get`, `yum`, etc.). See
+[here](https://www.atlassian.com/git/tutorials/install-git#linux) for an
+installation tutorial (if needed, scroll down to Linux).
 
 ### MacOSX
-An Apple version of `git` is provided by Apple's Xcode program in its command line tools. Install Xcode from AppStore; open a terminal and type
+An Apple version of `git` is provided by Apple's Xcode program in its command
+line tools. Install Xcode from AppStore; open a terminal and type
 
 ```
 xcode-select --install
 ```
 
-For the standard `git`, see
+For the standard, i.e., non-Apple version, `git`, see
 [here](https://www.atlassian.com/git/tutorials/install-git#mac-os-x) for
 a tutorial on `git` installation (if needed, scroll down to MacOSX).
 
@@ -111,10 +168,10 @@ place the _gwd_.
 in the top right corner and change to `HTTPS` (unless it
   already says `HTTPS` there).
 4. Now copy the
-`git clone https://yourusername@bitbucket.org/scilifelab-lts/reponame.git`
+`git clone https://yourusername@bitbucket.org/scilifelab-lts/<reponame>.git`
 text and paste it into your terminal, i.e., it should say
 ```
-git clone https://yourusername@bitbucket.org/scilifelab-lts/reponame.git
+git clone https://yourusername@bitbucket.org/scilifelab-lts/<reponame>.git
 ```
 in your terminal. Click enter.
 
@@ -125,26 +182,28 @@ Bitbucket repository is referred to as a _remote_.
 
 ### Updating a repository `git pull`
 
-The repository might be changed after you have cloned it. To get all
-new changes to your _gwd_ you must explicitly update it by typing
+The content of the remote repository might be changed after you have
+cloned it.  Your local _gwd_ does not automatically keep up-to-date
+with these changes; instead you must explicitly update your _gwd_
+by typing
 ```
 git pull
 ```
 (you must be somewhere inside your _gwd_ when doing this).
-This will probably require that you type your Bitbucket password.
+This will probably require that you type your account password.
 
 This will update all files that are out of date in your _gwd_.
 If you have done some changes to your files, `git` will usually
 warn about this and not do the pull. It is good to to take care
 of such changes (see below how) before `git pull`.
 
-### Do I have any changes? `git status` and `git diff`
+### Have I made any changes? `git status` and `git diff`
 To check for changes type
 ```
 git status
 ```
 This will write a small report, including
-- if you have any _Changes not staged for commit_,i.e., changed
+- if you have any _Changes not staged for commit_, i.e., changed
 files that have not been _committed_ to `git` yet.
 - if you have any _Untracked files_, i.e., new files that git
 doesn't know about.
@@ -155,9 +214,10 @@ If you want to see what the _uncommmitted_ changes are for a file
 (maybe so you can decide whether it should be kept or not), you can
 type
 ```
-git diff path/to/files
+git diff path/to/file
 ```
-This will show line-by-line differences between the file and the last committed version of it.
+This will show line-by-line differences between the file and the
+last committed version of it.
 
 ### Tell `git` about your changes: `git commit` and `git add`
 If you have made changes to a file that you want to keep in
@@ -175,7 +235,7 @@ git add path/to/file
 You then need to also commit this file as described above
 to complete the file addition.
 
-### How to remove changes or files: `git checkout`, `git mv` and `git rm`
+### How to reset, remove, move or rename files: `git checkout`, `git mv` and `git rm`
 If you have changes that you don't want to keep you can
 remove them from the file manually or just checkout the latest
 version of the file in git, by typing
@@ -184,13 +244,14 @@ git checkout path/to/file
 ```
 This will remove all changes you have made in the file.
 
-If you want to change the name of a file in git or just move it,
-you should always use `git mv` instead of the system command `mv`
+If you want to change the name of a file in git or just move it to
+another folder in _gwd_, you should **always** use `git mv` instead of
+the system command `mv`
 ```
 git mv path/to/oldfilename path/to/newfilename
 ```
 If you have a whole file that is no longer needed and you
-want to remove it from git, similarly use `git rm` and not
+want to remove it from git, similarly **always** use `git rm` and not
 the system `rm`:
 ```
 git rm path/to/file
@@ -207,7 +268,7 @@ to _push_ to the _remote_
 ```
 git _push
 ```
-This will probably require that you type your Bitbucket password.
+This will probably require that you type your git account password.
 
 #### Merge conflicts
 
@@ -224,10 +285,11 @@ you should:
 1. Open the file in a text editor
 2. Find the merge conflicts in the file; these are marked (by
 `git`) using sequences of ``>>>>>>``, ``<<<<<<<<``, and ``=======`` --
-usually just a few lines differ.
+usually just a few lines differ. I usually search for "<<<" in my
+text editor to locate the conflict.
 3. Try to figure out if you can manually merge the two version --
 maybe you have tried to fix the same thing, then decide which
-solution is best or maybe the conflict is really minor.
+solution is best, or maybe the conflict is really minor.
 4. Fix it, remove the conflict markers and the text that is
 not needed (remember to check if there are further conflicts
 in the file)
@@ -241,45 +303,65 @@ you might want to consult someone more experienced.
 
 ## Create a new branch
 
-If you want to introduce modifications or develop new features for a certain application without having to change anything in the main branch `master`,
+If you want to introduce modifications or develop new features for a certain
+application without having to change anything in the main branch `master`,
 then you can create a new branch.
 
 
-Let's say you are on the `master` branch and want to create a new branch. Here's what you'll do:
+Let's say you are on the `master` branch and want to create a new branch.
+Here's what you'll do:
 ```
 git checkout -b <my branch name>.
 ```
 
-This command will automatically create a new branch and then move you to that branch.
-To confirm that your new branch was created you can use the `git branch` command.
-The branch name with the asterisk next to it indicates which branch you're pointed to at that given time.
+This command will automatically create a new branch and then move you to
+that branch. To confirm that your new branch was created you can use the
+`git branch` command. The branch name with the asterisk next to it indicates
+which branch you're pointed to at that given time.
 
 
-Once you've created a branch, you can save your progress with `git add` and `git commit` as usual.
-Remember that executing `git push` will upload the changes _remotely_ to the current branch `<my branch name>`
-(_NB!_ You may perhaps get a message from git and  be asked to push explicitly to the remote version of the branch -- I usually just follow the syntax that is suggested in that message).
+Once you've created a branch, you can save your progress with `git add` and
+`git commit` as usual. Remember that executing `git push` will upload the
+changes _remotely_ to the current branch `<my branch name>` (_NB!_ You may
+perhaps get a message from git and  be asked to push explicitly to the remote
+version of the branch -- I usually just follow the syntax that is suggested
+in that message).
 
 
-Now if you are ready to make all the modifications in the branch to be part of the main branch, then you can merge it
-to `master` by executing:
+Now if you are ready to make all the modifications in the branch to be part
+of the main branch, then you can merge it to `master` by executing:
 
 ```
 git checkout master
 git merge <my branch name>
 ```
 
-Note that at any point in time, you can switch to the `master` branch by `git checkout master`.
-Similary, if you want to switch to a different branch then do `git checkout <my branch name>`.
+Note that at any point in time, you can switch to the `master` branch by
+`git checkout master`. Similary, if you want to switch to a different branch
+then do `git checkout <my branch name>`.
 
 ### Forking a repository
 
-If you are working in a project with multiple users or in a project owned by someone else, then it is useful to first fork the repository, that is, to make your own copy of the repository that you can work with and do the changes you ned to do. In many projects, this is the only way of contributing changes to a repository.
+If you are working in a project with multiple users or in a project owned by
+someone else, then it is useful to first fork the repository, that is, to make
+your own copy of the repository that you can work with and do the changes you
+need to do. In many projects, this is the only way of contributing changes
+to a repository.
 
-This is most easily done on repository web-page. For a BitBucket repository, you cllick on the '+'-sign in the left margin and select `Fork this repository`. You will then be asked where to place it -- usually you want to place it in your own workspace in an appropriate project. It could be good to add a short description for future reference. Then from your so created *local* fork repository web page, you continue by cloning a _gwd_ and then create a branch, implement, commit, and push changes, just as described above.
+This is most easily done on repository web-page. For a BitBucket repository,
+you click on the '+'-sign in the left margin and select `Fork this repository`.
+You will then be asked where to place it -- usually you want to place it in
+your own workspace in an appropriate project. It could be good to add a short
+description for future reference. Then from your so created *local* fork
+repository web page, you continue by cloning a _gwd_ and then create a
+branch, implement, commit, and push changes, just as described above. (If you
+  want to share your changes with the repo owner, you can make a _pull request_
+  -- currently not covered here.)
 
 #### Removing a forked repository
 
-Removing a forked repository will not affect the original repository at all. Removal is best done on the Bitbucket webpage for the forked repository:
+Removing a forked repository will not affect the original repository at all.
+Removal is best done on the Bitbucket webpage for the forked repository:
 1. Verify that you are in the right repository!
 2. Click `Repository settings` in the left margin.
 3. Click `Repository details` under `GENERAL` to the left of the Pages.
@@ -288,6 +370,15 @@ Removing a forked repository will not affect the original repository at all. Rem
 
 
 ## Good `git` practices
+It is good to keep your repo clean:
+
+- Keep the code and the indata separated; **Never** but data on ’git’.
+- Try to structure your files, so that it is easy to navigate the repo.
+- Add a README file, preferably in _markdown_-format_ (.md_) in the repo
+top level folder, that briefly explains the purpose and structure of the
+repo. This README will display on the web-page of the repo.
+- Also, add README files in strategic subfolders.
+
 When developing code/text (i.e., changing files) in `git`, there
 are some things one can do to avoid _merge conflicts_:
 - Start each developing session by `git pull` so you don't work
@@ -303,26 +394,42 @@ There are several other, more general, crash courses or tutorials
 that complements, improves or extends this text. You can find
 them by googling.
 
-Github provides a rather good `git` documentation which can be googled.
+Github provides a rather good and detailed `git`
+[documentation](https://git-scm.com/docs), which can also be googled;
+actually googling for the feature you are interested in is generally
+a very productive idea.
 Specifically, one can look at the commands `git log`, `git stash`,  
-_branching in git_, and the concepts of _forking repositories_ --
-but these belong to the advanced course:)
+look more into _branching in git_, and the concept of _forking repositories_,
+and how to make pull requests.
+
+If you are setting up your own repo, to which others can contribute, you might
+want to look up the _Continuous integration_ (_CI_) feature perovided by `git`
+repo service providers. This can help you check for conflicts and run test on
+incoming pull requests or commit and simplify maintaining your repository. But
+this is definitely for a more advacned course:).
 
 
 ## Exercises
 
 These will require that you have a Bitbucket user account.
 
-1. Create a fork of the present repository (i.e., https://bitbucket.org/scilifelab-lts/snakemakecrashcourse/src/master/).  
-Verify that the address of forked repository and the original repository are different.
-2. Clone a git working directory (_gwd_) from your *fork* of the present repository.  
-Can you see it?
-3. `cd` into the _gwd_ and open the file `README.md` in a text editor (e.g., atom). Change the title from  
+1. Create a fork of the present repository (i.e.,
+https://bitbucket.org/scilifelab-lts/snakemakecrashcourse/src/master/).  
+Verify that the address of forked the repository and the original repository
+are different.
+2. Clone a git working directory (_gwd_) from your *fork* of the present
+repository.  Can you see it?
+3. `cd` into the _gwd_ and open the file `README.md` in a text editor
+(e.g., atom). Change the title from  
 _# A crash course to `git`_  
 to   
 _# My crash course to `git`_  
-Commit the changes to git with an appropriate message, and push them to the forked repository. Update the fork webpage in your browser.  
-Can you see the changes?
-3. Create a branch called "_MyBranch_". Use a text-editor to create a file `myfile` and add some content. Add the file to `git` commit and push it. Update the fork page in the browser.  
+Commit the changes to git with an appropriate message, and push them to the
+forked repository. Update the fork webpage in your browser.  Can you see
+the changes?
+3. Create a branch called "_MyBranch_". Use a text-editor to create a file
+`myfile` and add some content. Add the file to `git` commit and push it.
+Update the fork page in the browser.  
 Can you se the file?
-5. You will need the forked repository in the exercises of the other rash courses. When you have completed them, you can delete the fork.
+5. You will need the forked repository in the exercises of the other crash
+courses. When you have completed them, you can delete the fork.
