@@ -1,9 +1,5 @@
 # Git Crash Course
 
-**Todo:**  
-  - Add info on how the repo looks on, e.g., Bitbucket, code, branches, etc.
-  - Should we have the
-
 ## Why should I use it?
 `git` is one of the essential corner-stone for reproducible research.
 Not only does it provide a backup for all your code, but it also keeps
