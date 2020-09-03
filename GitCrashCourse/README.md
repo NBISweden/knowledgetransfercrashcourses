@@ -262,7 +262,7 @@ rm path/to/file
 To update the _remote_ repository with your committed changes, you need
 to _push_ to the _remote_
 ```
-git _push
+git push
 ```
 This will probably require that you type your git account password.
 
@@ -368,7 +368,7 @@ Removal is best done on the Bitbucket webpage for the forked repository:
 ## Good `git` practices
 It is good to keep your repo clean:
 
-- Keep the code and the indata separated; **Never** but data on ’git’.
+- Keep the code and the indata separated; **Never** put data on ’git’.
 - Try to structure your files, so that it is easy to navigate the repo.
 - Add a README file, preferably in _markdown_-format_ (.md_) in the repo
 top level folder, that briefly explains the purpose and structure of the
