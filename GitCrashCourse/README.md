@@ -59,6 +59,11 @@ server). In fact, all commands in the rest of this text assumes that
 you work in such a terminal and that you have _some_ experience
 using it.
 
+#### Additional info
+There's also nice information and very good tutorials about conda available in the
+**Tools in reproducible research** [course material](https://uppsala.instructure.com/courses/51980).
+
+
 ## What about GitHub, GitLab and Bitbucket?
 The central repository (or _repo_ for short) can be on a local server
 or laptop, but it is always much better to keep it at some repository

@@ -48,9 +48,9 @@ be due to the actual program being platform-specific, to difficulties to port
 the program between platforms or to channel policies (*bioconda* not supporting
 Windows?).
 
-## Additional info
+#### Additional info
 There's also nice information and very good tutorials about conda available in the
-**Tools in reproducible research** [course material](https://nbis-reproducible-research.readthedocs.io/en/latest/conda/).
+**Tools in reproducible research** [course material](https://uppsala.instructure.com/courses/51980).
 
 
 ## Installation
