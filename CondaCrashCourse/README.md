@@ -278,7 +278,7 @@ conda clean --all
 `conda` asks for verification for cleaning, then perform the cleaning and
 reports back.
 
-### Mamba -- if your conda is very slow and shaky <a name="mamba"></a>
+### Mamba -- if your conda is very slow and shaky {#mamba"}
 
 As the package channels has grown very large, it has turned out that the
 original conda implementation, at times, has problems parsing all packages.
@@ -310,6 +310,7 @@ mamba env create -f smthg.yaml
 Some exceptions are `conda activate`, `conda deactivate` and `conda init`.
 
 ## Exercises
+
 1. Create an environment using the file [snakemake.yaml](snakemake.yaml).
 Activate the environment and test that you have access to the program by typing:
 

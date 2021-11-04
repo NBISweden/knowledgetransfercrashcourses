@@ -7,9 +7,12 @@ reduce repo size
 
 ## Prerequisites
 
-Please complete the [Git Crash Course](/GitCrashCourse/README.md), the [Conda
-Crash Course](TBA), and the [Tmux Crash Course](/TmuxCrashCourse/README.md)
-before continuing.
+Please complete the [Git Crash Course](/GitCrashCourse/README.md), the
+[Conda Crash Course](/CondaCrashCourse/README.md), and the
+[Tmux Crash Course](/TmuxCrashCourse/README.md) before continuing.
+
+Specifically, you will need to create and activate the snakemake environment
+from the [Conda Crash Course exercises](CondaCrashCourse/README.md#exercises).
 
 ## Introduction
 
