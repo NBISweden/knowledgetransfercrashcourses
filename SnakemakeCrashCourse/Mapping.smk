@@ -35,7 +35,8 @@ def prependPwd(path):
 
 """ Special function for the purpose of this crash course.
     *** Do not use in rules! ***
-    Updates the dummy paths (beginning with ''/path/to/'in the given configuration file to a correct absolute path corresponding to
+    Updates the dummy paths (beginning with ''/path/to/'in the given
+    configuration file to a correct absolute path corresponding to
     the Example data. NB! In a real case, the data would not be stored
     in a git repo. Instead the known absolute paths to the data would
     be given directly in the config file. """
@@ -96,10 +97,24 @@ samples = pd.read_csv("mappingSamples.tsv", sep="[\t,]",
 localrules: linkFastq, linkReference
 
 
-# Target rule
+# Target rules
 """ By listing the final count files for all samples, this will run the
-    whole workflow for all samples """
+    whole workflow for all samples. Since we place this rule first in
+    the workflow, this rulke will, conveniently, be run if we don't
+    provide sankemake with a specific output argument. """
 rule all:
+    input:
+        # expand creates a list by replacing {sample} by all
+        # sample names in samples
+        tcount = expand(
+            "count/{sample}.FASTQ_Mapping_mapped_filtered_tcount.tsv"
+            sample = samples.index
+        )
+
+""" We can also define 'intermediate target rules', e.e., that performs
+    all required to obtain bam-files for all sampes. We can run this rule
+    by specifying its name as anarguemnt to snakemake."""
+rule allMapping:
     input:
         # expand creates a list by replacing {sample} by all
         # sample names in samples
@@ -108,9 +123,9 @@ rule all:
             sample = samples.index
         )
 
-
 # Workflow
-""" The remaining rules are written in the order of expected execution"""
+""" The remaining rules are, for convenience, written in the order 
+    of expected execution"""
 
 
 # Soft-linking
