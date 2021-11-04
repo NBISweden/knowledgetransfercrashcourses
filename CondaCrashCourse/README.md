@@ -311,7 +311,7 @@ Some exceptions are `conda activate`, `conda deactivate` and `conda init`.
 
 ## Exercises
 
-1. Create an environment using the file [snakemake.yaml](snakemake.yaml).
+1. Create a conda environment for snakemake using the file [snakemake.yaml](snakemake.yaml).
 Activate the environment and test that you have access to the program by typing:
 
 ```
@@ -321,10 +321,9 @@ snakemake snakemake --version
 Then deactivate the environment.  
 Did it work? Did you get the right version?
 
-2. Use a text-editor and create your own conda environment file `bedtools.yaml`,
- google or conda search to find a package for bedtools version x.y.z. and add
- that to the environment file. Create the environment and activate it. Check
- that you can run bedtools.
+2. Use a text-editor and create your own conda environment file `bedtools.yaml`, google or conda search to find a package for bedtools
+(you can select some version x.y.z.) and add that to the environment file. Create the environment
+and activate it. Check that you can run bedtools.
 3. Add `samtools` to the environment file and update the environment. Check
 that it worked.
 4. Deactivate and remove the environment.
