@@ -100,7 +100,7 @@ Unloading the module is done by:
 
 ## Usage
 
-(Note! If conda seems to be extremely slow, read [this section first](#mamba))
+(Note! If conda seems to be extremely slow, read [this section first](#mamba----if-your-conda-is-very-slow-and-shaky-mamba))
 
 ### Finding a conda packages
 
