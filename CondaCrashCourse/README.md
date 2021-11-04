@@ -319,11 +319,12 @@ snakemake snakemake --version
 ```
 
 Then deactivate the environment.  
-Did it work? Did you get the right version?
+Did it work? Did you get the right version (as compared to what was requested in
+[snakemake.yaml](snakemake.yaml))?
 
-2. Use a text-editor and create your own conda environment file `bedtools.yaml`, google or conda search to find a package for bedtools
-(you can select some version x.y.z. if you like) and add that to the
-environment file.
+2. Use a text-editor and create your own conda environment file `bedtools.yaml`,
+google or conda search to find a package for bedtools (you can select some
+version x.y.z. if you like) and add that to the environment file.
 Create the environmentand activate it. Check that you can run bedtools.
 3. Add `samtools` to the environment file and update the environment. Check
 that it worked.
