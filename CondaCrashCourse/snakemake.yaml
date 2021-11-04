@@ -1,4 +1,4 @@
-name: git
+name: snakemake
 channels:
   - conda-forge
   - bioconda
