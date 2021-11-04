@@ -102,7 +102,7 @@ rule sortAndIndex:
     # The output directive comprise a list of desired output files,
     # the list items can conveniently be named (notice that commas are
     # required between list items). The output directive defines wildcards
-    # inside curly brackets {}; the value of the wildcards is determined #
+    # inside curly brackets {}; the value of the wildcards is determined
     # when the rule is called either from command-line or by another rule
     # (more about this below). If an output folder (here "mapped") is
     # missing, snakemake will create it automatically.)
@@ -123,8 +123,6 @@ rule sortAndIndex:
     # Informative messages to the user can be included.
     shell:
         """
-        echo "Create backup"
-
         echo "Creating sorted and indexed bam"
         samtools sort {input.sam} -o {output.bam}
         samtools index {output.bam}
@@ -135,13 +133,17 @@ rule sortAndIndex:
 
 - The `output` directive describes what files the rule will produce, which, in
 the example above, expands to the python dictionary
-`{"bam": "mapped/{prefix}.bam", "bai": "mapped/{prefix}.bam.bai"}`.  "{prefix}" is a wildcard (see further [Wildcards and connecting rules](#Wildcards\ and\ connecting\ rules))
+`{"bam": "mapped/{prefix}.bam", "bai": "mapped/{prefix}.bam.bai"}`.  "{prefix}"
+is a wildcard (see further [Wildcards and connecting rules](#Wildcards\ and\ connecting\ rules))
 - The `input` directive describes the input files the rule require to do it job,
 which, in the example above, expands to the (single-itemed) python dictionary
 `{"sam": "mapped/{prefix}.sam"}`.  
 - The `shell` directive, describes the bash commands used to produce the output
-from the input. (Note, the `shell` directive can be replaced by the `script` or
-`run` directives, which are not covered here.)
+from the input. The `shell` commands may refer to the files defined in the input
+or output directives within curly brackets, e.g., `{input.sam}` will be understood
+as `"mapped/{prefix}.sam"` (`{prefix}` will be determined when rule is called).
+(Note, the `shell` directive can be replaced by the `script` or`run` directives,
+which are not covered here.)
 
 Other important directives include
 
@@ -150,10 +152,11 @@ Other important directives include
 - `log:` which defines a log file that can be used to capture `std output`
 and`std error` from the commands used.
 
-- `conda:` tells snakemake how create a conda environment providing the
-programs required by the rule (see further [Using conda environments](#Using\ conda\ environments)).
+- `conda:` tells snakemake how create a conda environment providing the programs
+required by the rule (see further [Using conda environments](#Using\ conda\ environments)).
 
-- `group:` assigns a "cluster job group" to a rule (see further [Cluster jobs, groups, and localrules](#Cluster\ jobs,\ groups,\ and\ localrules))
+- `group:` assigns a "cluster job group" to a rule (see further
+[Cluster jobs, groups, and localrules](#Cluster\ jobs,\ groups,\ and\ localrules))
 
 Examples on how these are used can be found below and in the Snakefile
 [mapping.smk](/mapping.smk).
@@ -161,7 +164,8 @@ Examples on how these are used can be found below and in the Snakefile
 
 ### Wildcards and connecting rules
 
-If `snakemake` is run, with a Snakefile including the rule above, and requesting the output `mapped/mysample.bam` (see further
+If `snakemake` is run, with a Snakefile including the rule above, and
+requesting the output `mapped/mysample.bam` (see further
 [Running Snakemake](#Running\ Snakemake)), then `snakemake` will first
 check that the requested output file does not already exists, in which
 case it reports this and stops.  
@@ -306,8 +310,8 @@ in snakemake; a really annoying drawback is that indentations _must be as spaces
 and not as ASCII tab-characters_. However, many (but not all) text editors
 handles this `tabs-as-spaces` requirement quite well; that is, when you hit
 the tab-key it will insert a sequence of spaces instead of the ASCII tab
-character ([Atom](https://github.com/atom/atom]) is quite easy, free,
-multi-platform editor that can handle this issue).  
+character ([Sublime](https://www.sublimetext.com) and [Atom](https://github.com/atom/atom])
+are quite easy, free, multi-platform editors that can be set to handle this issue).
 The json format is more strongly typed; it uses brackets and commas instead
 of indentations and requires all strings to be quoted; also, it does not ¨
 support comments.
@@ -364,13 +368,13 @@ If we have a lot of samples, for which we each want to include a number of
 configuration variables, the standard configure file can become rather messy and
 cumbersome. In such a case, it may be better to use a _tabular_ configure file.
 This is essentially a spreadsheet, but it must be in a text file format (not MS
-Excel, MacOSX Numbers, etc.). This text file format could be tab-delimited
-(`.tsv`) or comma-delimited (`.csv`); `snakemake` uses pythons pandas module
-which determines the delimiter automatically. (*__NB!__ Unfortunately, this
-'automatical delimiter recognition' does not, currently, seem to work
-seamlessly in pandas. Below, I have, instead, manually set the separator to
-be either tab or comma. Unfortunately, this precludes using, e.g., commas
-inside fields.*)
+Excel, MacOSX Numbers, etc.; however, these program can export csv-files). This
+text file format could be tab-delimited (`.tsv`) or comma-delimited (`.csv`);
+`snakemake` uses pythons `pandas` module which determines the delimiter
+automatically. (*__NB!__ Unfortunately, this 'automatical delimiter recognition'
+does not, currently, seem to work seamlessly in pandas. Below, I have, instead,
+manually set the separator to be either tab or comma. Unfortunately, this
+precludes using, e.g., commas inside fields.*)
 
 A tabular configure file could look as follows.
 
@@ -387,6 +391,9 @@ This is typicallly read into the Snakefile as follows:
 import pandas as pd
 samples = pd.read_csv("tabularSamples.tsv", sep = "[\t,]", comment="#").set_index("sample")
 ```
+
+(Note! Both the Atom and Sublime text editors provide some crude csv/table editor
+mode that might, however, take some time to get used to.)
 
 each column can then be accessed in the Snakefile as a python dictionary
 indexed by the sample name, e.g.,:
@@ -443,15 +450,16 @@ send them to the cluster. *You do not need to manually submit jobs!*
 
 To run snakemake in parallel on UPPMAX, the following options are used:
 
-- `--cluster`: this defines the sbatch command needed to commit jobs to the cluster, and uses rule-specific variables defined in a *cluster-config file*.
+- `--cluster`: this defines the sbatch command needed to commit jobs to the
+cluster, and uses rule-specific variables defined in a *cluster-config file*.
 
 - `--cluster-config`: this tells snakemake where to look for the *cluster-config file*.
 
 
 #### The cluster config file
 
-The yaml-formatted cluster-config file defines values for the various `sbatch`
-options (see [UPPMAX slurm user guide](https://www.uppmax.uu.se/support/user-guides/slurm-user-guide/)), e.g.,
+The yaml-formatted cluster-config file defines values for the various `sbatch` options 
+(see [UPPMAX slurm user guide](https://www.uppmax.uu.se/support/user-guides/slurm-user-guide/)), e.g.,
 
 ```
 # First define a default setting
