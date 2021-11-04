@@ -20,8 +20,8 @@ if [ "$CLUSTER" = "rackham" ]; then # Change/add cluster name if needed
     # To run on cluster, a cluster config file is needed. If not present,
     # copy from workflow base directory. Update the contact email at
     # the same time.
-    if [[ ! -f mappingCluster.yaml ]]; then
-	echo "No mappingCluster.yaml found in present directory"
+    if [[ ! -f MappingCluster.yaml ]]; then
+	echo "No MappingCluster.yaml found in present directory"
 	echo "Do you want me to set this directory up as a analysis directory (y/n)?"
 	read answer
 	if [[ "$answer" != "y" ]]; then
@@ -29,15 +29,15 @@ if [ "$CLUSTER" = "rackham" ]; then # Change/add cluster name if needed
 	fi
 	echo "What's your email (for UPPMAX job error notifications)?"
 	read email
-	awk -v email=$email '{sub("your@email", email, $0); print $0}' $DIR/mappingCluster.yaml > mappingCluster.yaml
-	echo "mappingCluster.yaml copied with email updated. Your can make further changes to this file manually."
+	awk -v email=$email '{sub("your@email", email, $0); print $0}' $DIR/MappingCluster.yaml > MappingCluster.yaml
+	echo "MappingCluster.yaml copied with email updated. Your can make further changes to this file manually."
     fi
 
     time snakemake \
-      --snakefile $DIR/mapping.smk \
+      --snakefile $DIR/Mapping.smk \
       --use-conda \
       --cores 1 \
-      --cluster-config mappingCluster.yaml \
+      --cluster-config MappingCluster.yaml \
       --cluster " sbatch -J {cluster.name} -A {cluster.account} -p {cluster.partition} -n {cluster.n} -t {cluster.time} {cluster.other} " \
       -j \
       $@
@@ -57,7 +57,7 @@ if [ "$CLUSTER" = "rackham" ]; then # Change/add cluster name if needed
    #                  next line (NB! no space or text after the `\`)
 else
     # When run locally, we don't need --cluster-config or --cluster
-    time snakemake -s $DIR/mapping.smk --use-conda --cores 1 $@
+    time snakemake -s $DIR/Mapping.smk --use-conda --cores 1 $@
 fi
 
 
