@@ -278,7 +278,7 @@ conda clean --all
 `conda` asks for verification for cleaning, then perform the cleaning and
 reports back.
 
-### Mamba -- if your conda is very slow and shaky {#mamba"}
+### Mamba -- if your conda is very slow and shaky
 
 As the package channels has grown very large, it has turned out that the
 original conda implementation, at times, has problems parsing all packages.
