@@ -305,13 +305,14 @@ variants of config files.
 ### _Standard_ configure files in yaml or json format
 
 The _standard_ configure files can be in yaml-format or json format. An
-advantage of the yaml format is that it is quite similar to the directive syntax
-in snakemake; a really annoying drawback is that indentations _must be as spaces
-and not as ASCII tab-characters_. However, many (but not all) text editors
-handles this `tabs-as-spaces` requirement quite well; that is, when you hit
-the tab-key it will insert a sequence of spaces instead of the ASCII tab
-character ([Sublime](https://www.sublimetext.com) and [Atom](https://github.com/atom/atom])
-are quite easy, free, multi-platform editors that can be set to handle this issue).
+advantage of the yaml format is that it is quite similar to the directive
+syntax in snakemake; a really annoying drawback is that indentations
+_must be as spaces and not as ASCII tab-characters_. However, many (but
+not all) text editors handles this `tabs-as-spaces` requirement quite well;
+that is, when you hit the tab-key it will insert a sequence of spaces
+instead of the ASCII tab character ([Atom](https://github.com/atom/atom])
+and [Sublime](https://www.sublimetext.com) are quite easy, "free",
+multi-platform editors that can be set to handle this issue).
 The json format is more strongly typed; it uses brackets and commas instead
 of indentations and requires all strings to be quoted; also, it does not ¨
 support comments.
@@ -458,7 +459,7 @@ cluster, and uses rule-specific variables defined in a *cluster-config file*.
 
 #### The cluster config file
 
-The yaml-formatted cluster-config file defines values for the various `sbatch` options 
+The yaml-formatted cluster-config file defines values for the various `sbatch` options
 (see [UPPMAX slurm user guide](https://www.uppmax.uu.se/support/user-guides/slurm-user-guide/)), e.g.,
 
 ```
