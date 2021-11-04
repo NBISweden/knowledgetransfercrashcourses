@@ -1,5 +1,6 @@
 name: git
 channels:
   - conda-forge
+  - bioconda
 dependencies:
-  - git =2.26.2
+  - snakemake-minimal =5.3.0
