@@ -12,7 +12,7 @@ Please complete the [Git Crash Course](/GitCrashCourse/README.md), the
 [Tmux Crash Course](/TmuxCrashCourse/README.md) before continuing.
 
 Specifically, you will need to create and activate the snakemake environment
-from the [Conda Crash Course exercises](/CondaCrashCours/README.md#exercises).
+from the [Conda Crash Course exercises](/CondaCrashCourse/README.md#exercises).
 
 ## Introduction
 
