@@ -4,6 +4,7 @@
 
 - Maybe add rule to snakefile that downloads the reference (using wget) to
 reduce repo size
+- Update _Running on cluster_ to use `--profile slurm` instead
 
 ## Prerequisites
 
@@ -49,29 +50,30 @@ comprise several sequential analysis steps. For example, in a RNAseq analysis,
 this can include:
 
 - adaptor trimming.
-- mapping reads to genome,
-- estimating read coverage (counts) of featureCounts,
+- mapping reads to genome, and
+- estimating read coverage (counts) of featureCounts
 - various QC steps, and
 - differential expression analysis
 
 This sequence of steps is usually called a *workflow* or a *pipeline*.
 Typically, a majority of the steps are performed in the same way for the
-different input samples, which often can constitute a large number. It is
-therefore desirable to automatize the workflow so that that type of common
-steps can be easily repeated for all samples.
+different input samples, which often can constitute a large number of samples.
+It is therefore desirable to automatize the workflow so that that type of
+common steps can be easily repeated for all samples.
 
 **Snakemake** is a tool for designing and performing automated workflows,
 i.e., a sequence of individual steps (each running dedicated programs or
 scripts) that is required to convert some input, say, sequencing reads,
-to a desired output, say, read counts for individual genomic regions of
-interest. The workflow can be branching, coalescing, and parts of it can
-be run in parallel, typically on a high-performance computer (HPC) cluster.
+to a desired output, say, a report from a differential expression analysis
+based on these reads. The workflow can be branching, coalescing, and parts
+of it can be run in parallel, typically on a high-performance computer
+(HPC) cluster.
 
-If you already shave used dedicated `bash` scripts that run various scripts
+If you already have used dedicated `bash` scripts that run various scripts
 on your data in the right order, then, in one sense, a snakemake workflow can
-be viewed as just a glorified version of such of`bash` script. However,
-snakemake provides a more structured layout and is more flexible and easier
-to rerun/reuse.
+be viewed as just a glorified version of such a sequence of`bash` scripts.
+However, snakemake provides a more structured layout and is more flexible
+and easier to rerun/reuse.
 
 The structure of the workflow, that is, the different analysis steps to be run,
 is defined in [The Snakefile](#The\ Snakefile). In the Snakefile, each step
@@ -85,21 +87,22 @@ e.g., be shell commands (the mixer and the oven could be thought of as
 representing other programs or scripts that are called).
 
 By using a consistent system of naming the input and output of the different
-steps, these are connected so that the output of one analysis step is the input
-of the next analysis step. Moreover, by using *wildcards*  allows the same step
-be run on different inputs. The workflow can then be run all steps in on go or
-it is possible to run just part of the workflow by specifying the desired output
-as arguments when [Running snakemake](#Running\ Snakemake). It can also be
-modified to, e.g., different inuts, by the variable values set in
+steps or rules, `snakemake` connects these steps so that the output of one
+analysis step is the input of the next analysis step. Moreover, by using
+*wildcards*  allows the same step be run on different inputs. The workflow can
+then be run all steps in on go or it is possible to run just part of the
+workflow by specifying the desired output as arguments when
+[Running snakemake](#Running\ Snakemake). It can also be modified to, e.g.,
+different inputs, by the variable values set in
 [The configure files](#The\ configure\ files).
 
 Sometimes, snakemake are described as "_python_ with inspiration from the
 _make_ program". However, the basic snakemake rule syntax is not so very much
-python... and you definitely don't need to be a python expert to start using
-snakemake. However, you _can_ use python code snippets _almost_ anywhere in
-the Snakefile (see examples in the Mapping example Snakefile
-[mapping.smk](./mapping.smk)). In the text and examples below, similarities
-with python will be indicated, but can mostly be ignored.
+python at all... and you definitely don't need to be a python expert to start
+using snakemake. However, you _can_ use python code snippets _almost_ anywhere
+in the Snakefile (see examples in the Mapping example Snakefile
+[mappingSnakefile.smk](./mappingSnakefile.smk)). In the text and examples below,
+similarities with python will be indicated, but can mostly be ignored.
 
 The different parts that constitute a snakemake workflow are described below.
 
@@ -119,9 +122,10 @@ and what `bash` commands (e.g., calls to programs) are needed to produce the
 output from the input, respectively. Their use in the Snakefile is described
 in the code snippet and the associated texts below, which is designed to
 convert a sam file to a bam-file.   
-In the code snippet, extensive *comments* (starting with a `#`) are used to
-explain the *following* code line(s) (e.g., a directive). Notice that comments
-are ignored (not executed) by snakemake when running the workflow (see further
+In the code snippet, extensive *comments* (starting with a `#`) are added to
+explain the *following* code line(s) (e.g., a directive) -- this is not them
+case in a typical Snakefile. Notice that comments are ignored (not executed)
+by `snakemake` when running the workflow (see further
 [Comments in the code](#Comments\ in\ the\ code)).
 
 ```
@@ -142,11 +146,11 @@ rule sortAndIndex:
         bai = "mapped/{prefix}.bam.bai"
 
     # The input directive is a list of required input files, the list
-    # items can be named (notice that commas are required between list
-    # items). It often contains the wildcards defined in the output
+    # items can be named (notice that commas are required between multiple
+    #  list items). It often contains the wildcards defined in the output
     # directive, and will be substituted for its determined value
     input:
-        sam = "mapped/{prefix}.sam",
+        sam = "mapped/{prefix}.sam"
 
     # The shell directive minimally contains the bash commands needed to
     # convert the input to the output.  The code must be quoted (use triple
@@ -173,12 +177,13 @@ which, in the example above, expands to the (single-itemed) python dictionary
 from the input. The `shell` commands may refer to the files defined in the input
 or output directives within curly brackets, e.g., `{input.sam}` will be understood
 as `"mapped/{prefix}.sam"` (`{prefix}` will be determined when rule is called).
-(Note, the `shell` directive can be replaced by the `script` or`run` directives,
+(Note, the `shell` directive can be replaced by `script` or`run` directives,
 which are not covered here.)
 
 Other important directives include
 
-- `params:` which can define other important parameters, typically _not_ files.
+- `params:` which can define other important parameters, typically _not_ files,
+e.g., additional arguments to a program.
 
 - `log:` which defines a log file that can be used to capture `std output`
 and`std error` from the commands used.
@@ -211,11 +216,12 @@ expanding the wildcard becomes `mapped/mysample.sam`; if this file exists,
 snakemake will use this file as the input, Otherwise, it will look for
 another rule with an output matching `mapped/mysample.sam`and run this
 other rule to create the input. If you study the workflow in the
-Snakefile [mapping.smk](./mapping.smk), you will see that different rules
-have matching output and input; this behaviour creates a sequence of rules
-to be run to create `mapped/mysample.bam` -- a *workflow*!. (Can you see
-which rule in [mapping.smk](./mapping.smk) matches the output
-`"mapped/mysample.sam"`? What is its input after expanding the wildcard?).
+Snakefile [mappingSnakefile.smk](./mappingSmakefile.smk), you will see that
+different rules have matching output and input; this behaviour creates a
+sequence of rules to be run to create `mapped/mysample.bam` -- a *workflow*!.
+(Can you see which rule in [mappingSnakefile.smk](./mappingSnakeafile.smk)
+matches the output `"mapped/mysample.sam"`? What is its input after
+expanding the wildcard?).
 
 ### Rule order and the Target rule
 
@@ -223,22 +229,22 @@ If snakemake is run without an explicit file argument (see below under [Running
 Snakemake](#Running\ Snakemake)), the first rule in the Snakefile is by default
 run. Therefore, the first rule is often designed as a, so-called, _target_ rule
 that only has an input directive comprising the desired final output files (see
-example in [mapping.smk](./mapping.smk)).
+example in [mappingSnakefile.smk](./mappingSnakefile.smk)).
 
 With the exception of the Target rule, rules can be written in any order in the
 Snakefile. It makes sense to have them in 'chronological' order, i.e., the order
 they are expected to be executed. Most people will find it easier to read the
 Snakefile in such an order.
 
-The workflow in [mapping.smk](./mapping.smk) is set up to analyze a
-single sample by first soft-link the external files (fastq-file and reference
-genome fasta file) needed into the analysis directory, then map all reads in
-the fastq file to the reference genome, and finally sorting and indexing the
-resulting bam-file. We can run the full workflow for a single sample, _s1_, by
-setting the final indexed bam-file  (`mapped/s1.bam.bai`) as the  argument of
-`snakemake`. However, if we list the output files from the final rule (i.e.,
-the indexed bam-files) for all samples in the Target rule, just running
-`snakemake` without argument will go through the full workflow for all samples.
+The workflow in [mappingSnakefile.smk](./mappingSnakeafilekefile.smk) is set
+up to analyze a single sample by first soft-link the external files (fastq-file
+and reference genome fasta file) needed into the analysis directory, then map
+all reads in the fastq file to the reference genome, and finally sorting and
+indexing the resulting bam-file. We can run the full workflow for a single
+sample, _s1_, by setting the final indexed bam-file  (`mapped/s1.bam.bai`) as
+the  argument of `snakemake`. However, if we list the output files from the
+final rule (i.e., the indexed bam-files) for all samples in the Target rule, j
+ust running `snakemake` without argument will go through the full workflow for all samples.
 
 
 ### Cluster jobs, groups, and localrules
@@ -276,7 +282,7 @@ rule index:
 
 Moreover, if some jobs are ridiculously short (e.g., soft-linking external
 files), these can be run on the login node by listing them as `localrules`
-(see example in [mapping.smk](./mapping.smk)).
+(see example in [mappingSnakefile.smk](./mappingSnakefile.smk)).
 
 ### Using conda environments
 
@@ -284,7 +290,7 @@ A very nice feature of `snakemake` is that it automatizes the use of software
 environments, either using `conda`  or using *containers* (not treated here), on a
 rule-based basis. To obtain this:
 
-1. first create a conda environment yaml-file, including the software, required
+1. First create a conda environment yaml-file, including the software, required
 by a rule, as dependencies and the corresponding channels (see [Conda crash
 course](TBA)).
 
@@ -330,22 +336,22 @@ Comments can be added in either of the following ways:
 ## The configure files
 
 It is convenient to define input variables, including external input data, in a
-configure file, instead of hard-coding them in the Snakfile. There are two
+configure file, instead of hard-coding them in the Snakefile. There are two
 variants of config files.
 
 ### _Standard_ configure files in yaml or json format
 
-The _standard_ configure files can be in yaml-format or json format. An
-advantage of the yaml format is that it is quite similar to the directive
-syntax in snakemake; a really annoying drawback is that indentations
+The _standard_ configure files can be in _yaml-format_ or _json-format_. An
+advantage of the _yaml-format_ is that it is quite similar to the directive
+syntax in snakemake; a really _annoying_ drawback is that indentations
 _must be as spaces and not as ASCII tab-characters_. However, many (but
 not all) text editors handles this `tabs-as-spaces` requirement quite well;
 that is, when you hit the tab-key it will insert a sequence of spaces
 instead of the ASCII tab character ([Atom](https://github.com/atom/atom])
 and [Sublime](https://www.sublimetext.com) are quite easy, "free",
 multi-platform editors that can be set to handle this issue).
-The json format is more strongly typed; it uses brackets and commas instead
-of indentations and requires all strings to be quoted; also, it does not ¨
+The _json-format_ is more strongly typed; it uses brackets and commas instead
+of indentations and requires all strings to be quoted; also, it does not
 support comments.
 
 - yaml example
@@ -353,11 +359,11 @@ support comments.
 ```yaml
 # to assign a single value to variable
 variable1: 17
-# to assign a list (indentations are important)
+# to assign a list (indentations as spaces are important)
 variable2:
   - value1
   - value2
-# to assign a dictionary (indentations are important)
+# to assign a dictionary (indentations as spaces are important)
 variable3:
   key1 : value1
   key2 : value2
@@ -406,7 +412,7 @@ text file format could be tab-delimited (`.tsv`) or comma-delimited (`.csv`);
 automatically. (*__NB!__ Unfortunately, this 'automatical delimiter recognition'
 does not, currently, seem to work seamlessly in pandas. Below, I have, instead,
 manually set the separator to be either tab or comma. Unfortunately, this
-precludes using, e.g., commas inside fields.*)
+precludes using commas inside fields.*)
 
 A tabular configure file could look as follows.
 
@@ -415,8 +421,10 @@ A tabular configure file could look as follows.
 sample  fastq                   readlength  Treatment
 s1      /crex/path/to/s1.fastq  71          case
 s2      /crex/path/to/s2.fastq  70          control
-...
 ```
+(Note! Both the Atom and Sublime text editors provide some crude csv/table editor
+mode that might, however, take some time to get used to.)
+
 This is typicallly read into the Snakefile as follows:
 
 ```python
@@ -424,16 +432,14 @@ import pandas as pd
 samples = pd.read_csv("tabularSamples.tsv", sep = "[\t,]", comment="#").set_index("sample")
 ```
 
-(Note! Both the Atom and Sublime text editors provide some crude csv/table editor
-mode that might, however, take some time to get used to.)
-
 each column can then be accessed in the Snakefile as a python dictionary
 indexed by the sample name, e.g.,:
 
-`samples["fastq"]["sq"]` expands to `"/crex/path/to/s1.fastq"` and
-`samples["reads"]` expands to `"[70,71]"`.
+`samples["fastq"]["s1"]` expands to `"/crex/path/to/s1.fastq"` and
+`samples["readLength"]` expands to `"[71,70]"`.
 
 ## Running Snakemake
+
 *Here we go through how to run snakemake in detail. However, to simplify
 running workflows, it is recommended to use a
 [Snakemake wrapper script](#Wrapper\ script\ for\ Snakemake) as described
@@ -529,7 +535,7 @@ wildcards for the actual values of the `sbatch` option values:
 " sbatch -J {cluster.name} -A {cluster.account} -p {cluster.partition} -n {cluster.n} -t {cluster.time} {cluster.other}"
 ```
 The wildcards will be substituted for the corresponding setting in the cluster
-config file (e.g., `{cluster.partition} = core`)
+config file (e.g., `{cluster.partition}` will become `"core"`)
 
 ### Other very useful options
 
@@ -576,11 +582,11 @@ bash doMapping.sh -n path/to/requested/outputfile
 ## Exercises
 
 In the exercises, the workflow defined in the Snakefile
-[mapping.smk](/mapping.smk) is used together with this [Example
+[mappingSnakefile.smk](/mappingSnakefile.smk) is used together with this [Example
 data](../ExampleData/README.md).
 
 Throughout all exercises, take a look at the Snakefile
-[mapping.smk](mapping.smk), the config files
+[mappingSnakefile.smk](mappingSnakefile.smk), the config files
 [mappingConfig.yaml](mappingConfig.yaml) and
 [mappingSamples.tsv](mappingSamples.tsv), and the env files, and try to
 understand what they do and what happens when you run the commands in the
@@ -591,8 +597,9 @@ and then clone a git working directory (_gwd_), as described in the
 [Git Crash course](../GitCrashCourse/README.md). To also appreciate
 `snakemake`'s cluster capabilities you should do this on an UPPMAX cluster
 login-node (e.g., rackham), but you can run on your laptop as well.
-1. Create a *Analysis working directory* (`awd`) --- this should be different
-and outside the git working directory (`gwd`) -- and `cd` into `awd`.
+
+1. Create an empty *Analysis working directory* (`awd`) --- this should be
+different and outside the git working directory (`gwd`) -- and `cd` into `awd`.
 
 2. Run `snakemake` from `awd` to create the output file `fastq/s1_R1.fastq.gz`.
 Do not run it as a cluster job or use the wrapper script `doMapping.sh` yet, but
@@ -604,7 +611,7 @@ What files were created? Why?
 file argument.  
 What samples did you get final output files for? Why?
 
-4. Update the workflow so that final output files also for a sample named `s2`,
+4. Update the workflow so that a final output files also for a sample named `s2`,
 is produced; use input fastq `SRR3222412-19_1.fq.gz` and `SRR3222412-19_1.fq.gz`
 in the [Example Data directory](../ExampleData/README.md) for `s_2`. Then rerun
 the command used in 3. (Tip: Edit the *local* config files in `awd` -- not those
@@ -612,13 +619,12 @@ in `gwd`; use a dry-run to check if you got things right.)
 Did it work? Were all samples run?
 
 
-### Extra-curricular exercise
+### Extra-curricular exercise (advanced)
 
 5. Add a rule that uses the program `featureCount` to summarize the read counts
 on the different features of the genome annotation file
 [../ExampleData/Mus_musculus.GRCm38.99.chromosome.19.gtf.gz](../ExampleData/annotation/README.md).
-The relevant shell command for featureCount would be:
-
-        featureCounts -g gene_id -t exon -s 1 -R BAM -a {input.gtf} -o {output.counts} {input.bam}  
-    Remember to also change the final output files in the target rule.  
-    Did it work?
+The relevant shell command for featureCount would be:  
+`featureCounts -g gene_id -t exon -s 1 -R BAM -a {input.gtf} -o {output.counts} {input.bam}`  `
+Remember to also change the final output files in the target rule.  
+Did it work?
