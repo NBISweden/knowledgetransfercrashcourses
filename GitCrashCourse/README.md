@@ -68,13 +68,14 @@ There's also a very good tutorial about conda available in the
 The central repository (or _repo_ for short) can be on a local server
 or laptop, but it is always much better to keep it at some repository
 service provider. There are several such providers, the most common are
-Github, Bitbucket, and Gitlab. All of these offer free accounts that provide
+GitHub, Bitbucket, and GitLab. All of these offer free accounts that provide
 you with your own user-name and a password and allows you to create
 repositories or download from public repositories. There are some, more
 or less, subtle differences between these providers (see, e.g., discussions
 [here](https://www.gangboard.com/blog/github-vs-gitlab-vs-bitbucket)),
-but the choice of which to use is almost arbitrary. _NBIS lts_ has a professional
-(paid) account with Bitbucket, which is why we use it in this project.
+but the choice of which to use is almost arbitrary. I will here mainly refer
+to the GitHub web interface, but will try to mention differences in Bitbucket.
+Unfortunately, I don't have experience of GitLab.
 
 You will (almost certainly) need to apply for an an account to the
 central repository you choose to use; here follows links to the account
@@ -88,12 +89,12 @@ you will start at the _code_ or _source_ tab of the repo.
 
 1. At or near the top the repo's _name_ is given.
 2. Either below that or in the sidebar, there will be links to
-different _repo tabs_ -- you will most often need the _code__/_source_
+different _repo tabs_ -- you will most often need the _code_/_source_
 tab.
 3. Below that there is a roll-down menu with the available
 [branches]()#create-a-new-branch)in the repo; typically you are interested
 in the _master_ branch.
-4. Next, the fie and folder content of the repository is listed.
+4. Next, the file and folder content of the repository is listed.
 5. Below that, the content of the README in the top repo folder is shown.
 This README file (typically in _markdown_-format, _.md_) contains a
 description of the repo provided by the owner.
@@ -165,8 +166,8 @@ These are not covered by this crash course (`google` if you are interested).
 We will consider the situation where you want to clone an existing
 repository and create a git working directory (_gwd_) on your computer.
 Typically you have a web-address to the repository; we'll assume
-here that it is a Bitbucket repository, but it works similarly for
-Github, etc.
+here that it is a Github repository, but it works similarly for
+Bitbucket, etc.
 
 1. open a unix terminal and `cd` to the place where you want
 place the _gwd_.
@@ -175,11 +176,11 @@ place the _gwd_.
 3. In the window that opens, click the button that says `SSH`
 in the top right corner and change to `HTTPS` (unless it
   already says `HTTPS` there).
-4. Now copy the
-`git clone https://yourusername@bitbucket.org/scilifelab-lts/<reponame>.git`
-text and paste it into your terminal, i.e., it should say
+4. Now copy the address and type
+`https://github.com/<owner>/<reponame>.git`
+text and paste it into your terminal after `git close`, i.e., it should say
 ```
-git clone https://yourusername@bitbucket.org/scilifelab-lts/<reponame>.git
+git clone https://github.com/<owner>/<reponame>.git
 ```
 in your terminal. Click enter.
 
@@ -301,7 +302,8 @@ solution is best, or maybe the conflict is really minor.
 4. Fix it, remove the conflict markers and the text that is
 not needed (remember to check if there are further conflicts
 in the file)
-5. Close the file, `git commit` it and `git push`
+5. Close the file, do `git commit -m "Fix merge conflict"` (without
+a file name) and `git push`
 6. If the conflicts are hard to resolve, maybe it is unclear what
 you can remove or maybe very large parts of the file is affected,
 don't hesitate to ask for help -- you might need to communicate
@@ -356,24 +358,48 @@ your own copy of the repository that you can work with and do the changes you
 need to do. In many projects, this is the only way of contributing changes
 to a repository.
 
-This is most easily done on repository web-page. For a BitBucket repository,
-you click on the '+'-sign in the left margin and select `Fork this repository`.
+This is most easily done on repository web-page. For a GitHub repository,
+you click on the `Fork` button at the top right of the repo page.
 You will then be asked where to place it -- usually you want to place it in
-your own workspace in an appropriate project. It could be good to add a short
-description for future reference. Then from your so created *local* fork
-repository web page, you continue by cloning a _gwd_ and then create a
-branch, implement, commit, and push changes, just as described above. (If you
-  want to share your changes with the repo owner, you can make a _pull request_
-  -- currently not covered here.)
+your own workspace in an appropriate project. Then from your so created
+*local* fork repository web page, you continue by cloning a _gwd_ and then
+create a branch, implement, commit, and push changes, just as described above.
+(If you want to share your changes with the repo owner, you can make a
+_pull request_ -- currently not covered here.)
+
+The original repository that you forked from is called the upstream
+repository of your fork.
+
+#### Updating a forked repository from the upstream repository
+
+You might want to update your fork with any new changes in the upstream
+repository. This is most easily done on the for repository web-page, by
+clicking the `Fetch upstram` button at the upper right just above the
+file list (Github); In Bitbucket, there will be a button
+`Sync (X commits behind)` under repository details in the upper right
+corner.
 
 #### Removing a forked repository
 
 Removing a forked repository will not affect the original repository at all.
-Removal is best done on the Bitbucket webpage for the forked repository:
+Removal is best done on the webpage for the forked repository:
+
+###### Github
+
+1. Verify that you are in the right repository!
+2. Click on the `Settings` tab near the top of the page.
+3. Click `Options`in the left-hand menu.
+4. Scroll down to the bottom of the pages.
+5. In the `Fanger Zone`, click the `Delete this repository` button.
+6. Follow the instructions to complete the deletion.
+
+###### Bitbucket
+
 1. Verify that you are in the right repository!
 2. Click `Repository settings` in the left margin.
 3. Click `Repository details` under `GENERAL` to the left of the Pages.
-4. Scroll down to the bottom of the page and click `Delete repository`.
+4. Click the rolol-down menu `manage repository` on the top right of the
+page and click `Delete repository`.
 5. Verify that you want to delete.
 
 
@@ -381,7 +407,8 @@ Removal is best done on the Bitbucket webpage for the forked repository:
 It is good to keep your repo clean:
 
 - Keep the code and the indata separated; **Never** put data on ’git’.
-- Try to structure your files, so that it is easy to navigate the repo.
+- Try to structure your files into logical subfolders, so that it is easy
+to navigate the repo.
 - Add a README file, preferably in _markdown_-format_ (.md_) in the repo
 top level folder, that briefly explains the purpose and structure of the
 repo. This README will display on the web-page of the repo.
@@ -421,23 +448,23 @@ this is definitely for a more advacned course:).
 
 These will require that you have a Bitbucket user account.
 
-1. Create a fork of the present repository (i.e.,
+1. Create a fork of the present repository (i.e., on the web page
 https://github.com/NBISweden/knowledgetransfercrashcourses.git).  
 Verify that the address of forked the repository and the original repository
 are different.
 2. Clone a git working directory (_gwd_) from your *fork* of the present
 repository.  Can you see it?
-3. `cd` into the _gwd_ and open the file `README.md` in a text editor
-(e.g., atom). Change the title from  
-_# A crash course to `git`_  
+3. `cd` into the _gwd_ and then into the _GitCrashCourse_ folder. Open the file
+`README.md` in a text editor(e.g., atom or sublime). Change the title from  
+_# Git Crash Course_  
 to   
-_# My crash course to `git`_  
+_# My Git Crash Course_  
 Commit the changes to git with an appropriate message, and push them to the
-forked repository. Update the fork webpage in your browser.  Can you see
+forked repository. Update the *fork* webpage in your browser.  Can you see
 the changes?
 3. Create a branch called "_MyBranch_". Use a text-editor to create a file
-`myfile` and add some content. Add the file to `git` commit and push it.
+`myfile` and add some text content. Add the file to `git`, commit and push it.
 Update the fork page in the browser.  
 Can you se the file?
-5. You will need the forked repository in the exercises of the other crash
-courses. When you have completed them, you can delete the fork.
+5. You will need the forked repository in the exercises of some of the other
+crash courses. When you have completed them, you can delete the fork.
