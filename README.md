@@ -1,13 +1,12 @@
 # Reproducibility Crash Course
 
 **WORK IN PROGRESS**  
-**Todo: see also repo issues**  
+**Todo: see also subfolder issues**  
 
-- Maybe list conda course first, because can be used to install the other:)
-- Maybe a separate course/page on yaml, since it pops up both infor conda and
+- Maybe a separate course/page on yaml, since it pops up both for conda and
 snakemake?
 
-**Feedback: please add suggestions to repo issues**
+**Feedback: please add suggestions to this and subfolder issues**
 
 ## Prerequisites
 Experience of working in a bash terminal. Some of the material refers to usage
