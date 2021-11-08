@@ -422,7 +422,7 @@ this is definitely for a more advacned course:).
 These will require that you have a Bitbucket user account.
 
 1. Create a fork of the present repository (i.e.,
-https://bitbucket.org/scilifelab-lts/snakemakecrashcourse/src/master/).  
+https://github.com/NBISweden/knowledgetransfercrashcourses.git).  
 Verify that the address of forked the repository and the original repository
 are different.
 2. Clone a git working directory (_gwd_) from your *fork* of the present
