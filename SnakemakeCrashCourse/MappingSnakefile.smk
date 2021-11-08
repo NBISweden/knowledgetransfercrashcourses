@@ -61,16 +61,16 @@ def correctPathsInConfigFiles(configfile):
 """ Read the yaml config file in the present analysis directory. If
     not existing, warn user and copy the one from the workflow source
     directory. """
-if not os.path.exists("mappingConfig.yaml"):
-    print("No user-defined config file, mappingConfig.yaml, found in the\n"
+if not os.path.exists("MappingConfig.yaml"):
+    print("No user-defined config file, MappingConfig.yaml, found in the\n"
           "present directory. Copying the config file from the workflow\n"
           "source directory. You probably want to edit this and add your\n"
           "own changes.")
     # copyAndUpdateConfigFiles('mappingConfig.yaml')
-    os.system("cp {} mappingConfig.yaml".format(prependWfd('mappingConfig.yaml')))
+    os.system("cp {} MappingConfig.yaml".format(prependWfd('MappingConfig.yaml')))
     # Special path correction for the purpose of this course
-    correctPathsInConfigFiles('mappingConfig.yaml')
-configfile: "mappingConfig.yaml"
+    correctPathsInConfigFiles('MappingConfig.yaml')
+configfile: "MappingConfig.yaml"
 
 """ Read sample info from the tabular config file 'samples.tsv' (using
     the python module pandas). This can be a tab-separated or
@@ -79,15 +79,15 @@ configfile: "mappingConfig.yaml"
     be accessed as 'samples['<colname>']' and cells can be accessed as
     'samples['<col>']['<sample name>']'. """
 import pandas as pd
-if not os.path.exists("mappingSamples.tsv"):
-    print("No user-defined tabular config file, mappingSamples.yaml, \n"
+if not os.path.exists("MappingSamples.tsv"):
+    print("No user-defined tabular config file, MappingSamples.yaml, \n"
           "found in the present directory. Copying the config file from \n"
           "the workflow source directory. You probably want to edit this \n"
           "and add your own changes.")
-    os.system("cp {} mappingSamples.tsv".format(prependWfd('mappingSamples.tsv')))
+    os.system("cp {} MappingSamples.tsv".format(prependWfd('MappingSamples.tsv')))
     # Special path correction for the purpose of this course
-    correctPathsInConfigFiles('mappingsamples.tsv')
-samples = pd.read_csv("mappingSamples.tsv", sep="[\t,]",
+    correctPathsInConfigFiles('MappingSamples.tsv')
+samples = pd.read_csv("MappingSamples.tsv", sep="[\t,]",
                       comment="#", engine="python").set_index("sample")
 
 
@@ -102,19 +102,7 @@ localrules: linkFastq, linkReference
     whole workflow for all samples. Since we place this rule first in
     the workflow, this rulke will, conveniently, be run if we don't
     provide sankemake with a specific output argument. """
-rule all:
-    input:
-        # expand creates a list by replacing {sample} by all
-        # sample names in samples
-        tcount = expand(
-            "count/{sample}.FASTQ_Mapping_mapped_filtered_tcount.tsv"
-            sample = samples.index
-        )
-
-""" We can also define 'intermediate target rules', e.e., that performs
-    all required to obtain bam-files for all sampes. We can run this rule
-    by specifying its name as anarguemnt to snakemake."""
-rule allMapping:
+rule allMapped:
     input:
         # expand creates a list by replacing {sample} by all
         # sample names in samples
@@ -122,6 +110,7 @@ rule allMapping:
             "mapped/{sample}.bam.bai",
             sample = samples.index
         )
+
 
 # Workflow
 """ The remaining rules are, for convenience, written in the order 
@@ -265,38 +254,6 @@ rule sortAndIndex:
         echo "Creating sorted and indexed bam"
         samtools sort {input.sam} -o {output.bam}
         samtools index {output.bam}
-
-        echo "Done"
-        """
-
-rule count:
-    output:
-        tcount = "count/{sample}.FASTQ_Mapping_mapped_filtered_tcount.tsv"
-    input:
-        snp = "snp/{sample}.FASTQ_Mapping_mapped_filtered_snp.vcf",
-        reference = "metadata/reference.fasta",
-        regions = "metadata/regions.bed",
-        bam = "filtered/{sample}.FASTQ_Mapping_mapped_filtered.bam",
-        bai = "filtered/{sample}.FASTQ_Mapping_mapped_filtered.bam.bai"
-    params:
-        outdir = "count/",
-        snpdir = "snp/",
-        readlength = lambda wc: samples["readlength"][wc.sample]
-    conda: "envs/featureCounts.yaml"
-    group: "snpAndCount"
-    log:
-        log = "log/count_{sample}.log"
-    shell:
-        """
-        exec &> {log.log}
-
-        echo "Running Mapping version:"
-        Mapping --version
-        echo "to perform dunk count on {input.bam}"
-        time Mapping count -o {params.outdir} -s {params.snpdir}  -r {input.reference} -b {input.regions} -t 2 {input.bam} -l {params.readlength}
-        # additional possible options:
-        # -m
-        # -q <minimum base quality>
 
         echo "Done"
         """

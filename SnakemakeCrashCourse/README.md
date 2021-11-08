@@ -82,6 +82,11 @@ with python will be indicated, but can mostly be ignored.
 
 The different parts that constitute a snakemake workflow are described below.
 
+#### Additional info
+There's also nice information and very good tutorials about conda available in the
+**Tools in reproducible research** [course material](https://uppsala.instructure.com/courses/51980).
+
+
 ## The Snakefile
 
 The cornerstone of snakemake is the Snakefile, which defines the workflow steps.

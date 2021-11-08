@@ -10,7 +10,9 @@ snakemake?
 **Feedback: please add suggestions to repo issues**
 
 ## Prerequisites
-Experience of working in a bash terminal
+Experience of working in a bash terminal. Some of the material refers to usage
+on UPPMAX, Hence, while not absolutely necssary, you will benefit best if you
+have some experience of working on UPPMAX.
 
 ## Introduction
 

@@ -73,6 +73,7 @@ be due to the actual program being platform-specific, to difficulties to port
 the program between platforms or to channel policies (*bioconda* not supporting
 Windows?).
 
+
 ## Installation
 
 Conda can be installed using the Miniconda installer. The installer is
@@ -343,11 +344,12 @@ did you get?
 Activate the environment and test that you have access to the program by typing:  
 `snakemake --version`    
 Then deactivate the environment.  
-Did it work? Did you get the right version?
+Did it work? Did you get the right version (as compared to what was requested in
+[snakemake.yaml](snakemake.yaml))?
 
-3. Use a text-editor and create your own conda environment file `bedtools.yaml`, google or conda search to find a package for bedtools
-(you can select some version x.y.z. if you like) and add that to the
-environment file.
+3. Use a text-editor and create your own conda environment file `bedtools.yaml`,
+google or conda search to find a package for bedtools (you can select some
+version x.y.z. if you like) and add that to the environment file.
 Create the environmentand activate it. Check that you can run bedtools.
 4. Add `samtools` to the environment file and update the environment. Check
 that it worked.
