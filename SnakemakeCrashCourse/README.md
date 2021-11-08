@@ -16,10 +16,31 @@ from the [Conda Crash Course exercises](/CondaCrashCourse/README.md#exercises).
 
 
 ## Why should I use it?
-`conda` is another _really_ useful tool for reproducible research.
+`snakemake` is another _really_ useful tool for reproducible research.
 It allows you to structure and organize your workflow code, but also
-helps you generalize it for running new samples and greatly simplifies
-running it efficiently on a cluster (as well as on you own laptop).
+helps you generalize it for running new samples -- in fact, it is designed
+for this.
+
+It also greatly simplifies running a workflow efficiently on a cluster.
+You don't need to bother about writing `sbatch` scripts for submitting
+cluster jobs, snakemake does that for you. It also keeps track of when
+jobs are completed and then submits the next job in the workflow
+automatically. When possible, it runs the workflow in parallel.
+
+Moreover, by tight integration with `conda` (as well as, various container
+tools), it creates conda software environments for different parts of your
+workflow automatically from your environment yaml-files.
+
+Lastly, we can mention that, while this tutorial focuses omn Snakemake, there
+is also an alternative workflow manager, `nextflow`; which one to choose is
+a matter of taste.
+
+#### Additional info
+
+There's also nice information and very good tutorials about conda available in the
+**Tools in reproducible research** [course material](https://uppsala.instructure.com/courses/51980).
+
+
 
 ## Introduction
 
@@ -81,11 +102,6 @@ the Snakefile (see examples in the Mapping example Snakefile
 with python will be indicated, but can mostly be ignored.
 
 The different parts that constitute a snakemake workflow are described below.
-
-#### Additional info
-There's also nice information and very good tutorials about conda available in the
-**Tools in reproducible research** [course material](https://uppsala.instructure.com/courses/51980).
-
 
 ## The Snakefile
 
