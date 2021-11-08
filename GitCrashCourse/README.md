@@ -116,7 +116,8 @@ to see what versions are available, in that case.
 ### Other Unix/Linux
 
 Most Unix/Linux systems probably provides `git` through their installer
-(`apt-get`, `yum`, etc.). See
+(`apt-get`, `yum`, etc.).
+Alternatively, [install using `conda`](#install-using-conda) or see
 [here](https://www.atlassian.com/git/tutorials/install-git#linux) for an
 installation tutorial (if needed, scroll down to Linux).
 
@@ -128,7 +129,8 @@ line tools. Install Xcode from AppStore; open a terminal and type
 xcode-select --install
 ```
 
-For the standard, i.e., non-Apple version, `git`, see
+For a standard, i.e., non-Apple version, `git`,
+[install using `conda`](#install-using-conda) or see
 [here](https://www.atlassian.com/git/tutorials/install-git#mac-os-x) for
 a tutorial on `git` installation (if needed, scroll down to MacOSX).
 
@@ -137,9 +139,14 @@ a tutorial on `git` installation (if needed, scroll down to MacOSX).
 I don't have much experience of Windows, but if you have an
 application providing unix terminal, maybe this also provides ’git’.
 
-Otherwise, see
+Otherwise, [install using `conda`](#install-using-conda) or see
 [here](https://www.atlassian.com/git/tutorials/install-git#windows) for
 a tutorial on `git` installation (if needed, scroll down to Windows).
+
+### Install using `conda`
+
+Finally, you can install `git` on your system, using `conda` (see the
+[CondaCrashCourse exercises](../CondaCrashCourse/README.md#exercises)).
 
 ### GUI version?
 This crash course is written for working with `git` in the terminal,

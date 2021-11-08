@@ -8,12 +8,37 @@ indentation, code-formatting, etc.) to properly handle yaml- and
 snakemake-formatted files, at least, but preferably also markdown and maybe
 also python and R/Rmarkdown. `Atom` and `Sublime` would be alternatives, but
 there are no conda-packages for these yet (Sublime is formally 'licensed', but atom is open-source ; MIT-license). Maybe a TODO could be to create
-an `atom` or `sublime` package
--- or find an alternative editor. (`Emacs` is actually my editor of preference,
+an `atom` or `sublime` package -- or find an alternative editor.
+(`Emacs` is actually my editor of preference,
 but that fails the *intuitive* criterium... and so does ’vim’)
 - need feedback on how this works with Windows (i.e., Windows unix-emulator
 or Windows 10)
 - We could add info on checksums, but I think this is an overkill?
+
+## Why should I use it?
+`conda` is a _really_ useful tool for reproducible research.
+It allows you to install a wealth of open-source software on your laptop,
+to update it easily and to remove it. You can create separate contained
+conda _environments_ with specific software combinations, e.g., if you
+want to be able to have two different (possibly incompatible) versions of
+a software on your laptop (a classic example is `python` v2 and v3, or
+software depending on these python versions).
+
+However, for reproducibility purposes, `conda` will help you to design and
+create project-specific software environments that can be re-used on other
+computer systems, including clusters. You can, thus, develop and test a
+workflow on your laptop using a conda-environment and then run it on
+real data on UPPMAX using the same environment.
+
+#### Additional info
+
+This course covers only the basic features of `conda`. To learn more
+advanced issues, you can look at the
+[conda documentation](https://conda.io/projects/conda/en/latest/user-guide/concepts/index.html).
+
+We also recommend the very good tutorials about
+conda available in the **Tools in reproducible research**
+[course material](https://uppsala.instructure.com/courses/51980).
 
 
 ## Introduction
@@ -47,11 +72,6 @@ Unix/Linux, certain packages may not be available for all platforms. This could
 be due to the actual program being platform-specific, to difficulties to port
 the program between platforms or to channel policies (*bioconda* not supporting
 Windows?).
-
-## Additional info
-There's also nice information and very good tutorials about conda available in the
-**Tools in reproducible research** [course material](https://nbis-reproducible-research.readthedocs.io/en/latest/conda/).
-
 
 ## Installation
 
@@ -310,21 +330,25 @@ mamba env create -f smthg.yaml
 Some exceptions are `conda activate`, `conda deactivate` and `conda init`.
 
 ## Exercises
+1. Create a conda environment for `git`using the yaml-file
+[git.yaml](git.yaml).  
+Activate the environment and test that you have access to the program by typing:  
+`git --version`    
+Then deactivate the environment.  
+This yaml-file does not specify what versions to install -- what version
+did you get?
 
-1. Create a conda environment for snakemake using the file [snakemake.yaml](snakemake.yaml).
-Activate the environment and test that you have access to the program by typing:
-
-```
-snakemake snakemake --version
-```
-
+2. Create a conda environment for `snakemake` using the file
+[snakemake.yaml](snakemake.yaml), which specifies requested versions.
+Activate the environment and test that you have access to the program by typing:  
+`snakemake --version`    
 Then deactivate the environment.  
 Did it work? Did you get the right version?
 
-2. Use a text-editor and create your own conda environment file `bedtools.yaml`, google or conda search to find a package for bedtools
+3. Use a text-editor and create your own conda environment file `bedtools.yaml`, google or conda search to find a package for bedtools
 (you can select some version x.y.z. if you like) and add that to the
 environment file.
 Create the environmentand activate it. Check that you can run bedtools.
-3. Add `samtools` to the environment file and update the environment. Check
+4. Add `samtools` to the environment file and update the environment. Check
 that it worked.
-4. Deactivate and remove the environment.
+5. Deactivate and remove the environment.

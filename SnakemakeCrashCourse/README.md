@@ -14,6 +14,13 @@ Please complete the [Git Crash Course](/GitCrashCourse/README.md), the
 Specifically, you will need to create and activate the snakemake environment
 from the [Conda Crash Course exercises](/CondaCrashCourse/README.md#exercises).
 
+
+## Why should I use it?
+`conda` is another _really_ useful tool for reproducible research.
+It allows you to structure and organize your workflow code, but also
+helps you generalize it for running new samples and greatly simplifies
+running it efficiently on a cluster (as well as on you own laptop).
+
 ## Introduction
 
 In many projects, the process of going raw data to final analysis results

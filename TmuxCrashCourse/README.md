@@ -1,10 +1,10 @@
 # Tmux Crash Course
 
 ## Introduction
-`tmux` is a virtual terminal program that can be used, for example, to keep 
+`tmux` is a virtual terminal program that can be used, for example, to keep
 long running jobs alive on UPPMAX and other clusters.
 
-## Why?
+## Why should I use it?
 A typical example is provided by running a `snakemake` workflow on th UPPMAX cluster _rackham_. When we start `snakemake`, a master process first starts. This master process handles all the admin of the workflow: it figures out which files needs to be produced,  which rules should be run, sends the specified runs as jobs to _rackham_'s cluster nodes, receives the results and evaluates what needs to be done next.
 
 In other words, this master process needs to stay alive during the whole lifetime of the workflow, but most of the time all it does is waiting. So we don't want to send it as a job to a cluster node, but rather have it going on one of the _rackham_ login nodes.
