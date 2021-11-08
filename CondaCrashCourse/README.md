@@ -7,7 +7,8 @@
 indentation, code-formatting, etc.) to properly handle yaml- and
 snakemake-formatted files, at least, but preferably also markdown and maybe
 also python and R/Rmarkdown. `Atom` and `Sublime` would be alternatives, but
-there are no conda-packages for these yet (Sublime is formally 'licensed', but atom is open-source ; MIT-license). Maybe a TODO could be to create
+there are no conda-packages for these yet (Sublime is formally 'licensed',
+but atom is open-source ; MIT-license). Maybe a TODO could be to create
 an `atom` or `sublime` package -- or find an alternative editor.
 (`Emacs` is actually my editor of preference,
 but that fails the *intuitive* criterium... and so does ’vim’)
@@ -331,6 +332,9 @@ mamba env create -f smthg.yaml
 Some exceptions are `conda activate`, `conda deactivate` and `conda init`.
 
 ## Exercises
+
+Start by change directory to the folder _CondaCrashCourse_ (`cd _CondaCrashCourse_`) .
+
 1. Create a conda environment for `git`using the yaml-file
 [git.yaml](git.yaml).  
 Activate the environment and test that you have access to the program by typing:  

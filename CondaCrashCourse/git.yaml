@@ -1,4 +1,4 @@
-name: snakemake
+name: git
 channels:
   - anaconda
 dependencies:
