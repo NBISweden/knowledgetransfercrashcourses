@@ -342,9 +342,13 @@ Activate the environment and test that you have access to the program by typing:
 Then deactivate the environment.  
 This yaml-file does not specify what versions to install -- what version
 did you get?
+You can also check the versions of the installed software by typing:
+`conda list`. This will also show what "dependency packages" was installed,
+i.e., the software libraries and programs that `git` require to work properly.
 
 2. Create a conda environment for `snakemake` using the file
-[snakemake.yaml](snakemake.yaml), which specifies requested versions.
+[snakemake.yaml](snakemake.yaml), which specifies requested versions, as well
+as some additional conda packages that wil be useful
 Activate the environment and test that you have access to the program by typing:  
 `snakemake --version`    
 Then deactivate the environment.  
