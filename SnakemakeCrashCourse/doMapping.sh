@@ -34,7 +34,7 @@ if [ "$CLUSTER" = "rackham" ]; then # Change/add cluster name if needed
     fi
 
     time snakemake \
-      --snakefile $DIR/Mapping.smk \
+      --snakefile $DIR/MappingSnakefile.smk \
       --use-conda \
       --cores 1 \
       --cluster-config MappingCluster.yaml \
@@ -57,7 +57,7 @@ if [ "$CLUSTER" = "rackham" ]; then # Change/add cluster name if needed
    #                  next line (NB! no space or text after the `\`)
 else
     # When run locally, we don't need --cluster-config or --cluster
-    time snakemake -s $DIR/Mapping.smk --use-conda --cores 1 $@
+    time snakemake -s $DIR/MappingSnakefile.smk --use-conda --cores 1 $@
 fi
 
 
