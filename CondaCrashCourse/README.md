@@ -292,7 +292,7 @@ conda env list
 this will list the conda environment names and the locations (as a Unix path)
 of their package files.
 
-_A note:_ In some cases, the list may include environments without a name  
+_A note:_ In some cases, the list may include environments without a name
 (with only a path), which are automatically created, see, e.g., the
 [SnakemakeCrashCourse](../SnakemakeCrashCourse/README.md#using-conda-environments)
 
