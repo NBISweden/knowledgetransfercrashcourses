@@ -466,5 +466,6 @@ the changes?
 `myfile` and add some text content. Add the file to `git`, commit and push it.
 Update the fork page in the browser.  
 Can you se the file?
+6. Switch back to the `master` branch.
 5. You will need the forked repository in the exercises of some of the other
 crash courses. When you have completed them, you can delete the fork.
