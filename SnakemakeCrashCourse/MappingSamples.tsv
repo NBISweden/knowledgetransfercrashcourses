@@ -4,7 +4,7 @@
 # you can have columns with additional metadata, e.g., 'read_direction'.
 #
 sample	fastq_1	fastq_2	read_direction
-s_1	/path/to/ExampleData/fastq/SRR3222409-19_1.fq.gz	/path/to/ExampleData/fastq/SRR3222409-19_2.fq.gz	forward
+s1	/path/to/ExampleData/fastq/SRR3222409-19_1.fq.gz	/path/to/ExampleData/fastq/SRR3222409-19_2.fq.gz	forward
 # < additional rows can be added >
 #
 # If read in  the Snakefile as
@@ -14,9 +14,9 @@ s_1	/path/to/ExampleData/fastq/SRR3222409-19_1.fq.gz	/path/to/ExampleData/fastq/
 # these can be expanded to python lists or dictionaries in Snakefile
 # rules, e.g., as (notice that `set_index` above sets
 # row.names = column 'sample'):
-#   - samples.index => [ "S_1_R1"]
+#   - samples.index => [ "s1"]
 #   - samples["fastq_1"] => {
-#        "s_1" : "path/to/ExampleData/fastq/SRR3222409-19_1.fq.gz",
+#        "s1" : "path/to/ExampleData/fastq/SRR3222409-19_1.fq.gz",
 #        <...>
 #     }
-#   - samples["fastq_1"]["s_1"] => "/path/to/ExampleData/fastq/SRR3222409-19_1.fq.gz"
+#   - samples["fastq_1"]["s1"] => "/path/to/ExampleData/fastq/SRR3222409-19_1.fq.gz"
