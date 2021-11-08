@@ -65,7 +65,7 @@ An annoying thing with `tmux`is that you can't scroll up to look at lines higher
 ```
 ctr-b page-up
 ```
-(i.e., press the `ctrl` key and `b` followed by the `page-up` key or the corresponding key combination -- on my mac it is `shift` and the `up-arrow`) allows you to scroll up. You must then tell `tmux` that you quit scrolling by simply typing
+(i.e., press the `ctrl` key and `b` followed by the `page-up` key or the corresponding key combination -- on my mac it is `fn` and the `up-arrow`) allows you to scroll up. You must then tell `tmux` that you quit scrolling by simply typing
 ```
 q
 ```
