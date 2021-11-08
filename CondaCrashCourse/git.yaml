@@ -1,0 +1,5 @@
+name: snakemake
+channels:
+  - anaconda
+dependencies:
+  - git
