@@ -283,6 +283,19 @@ conda env remove --name smthg
 `conda` then asks for verification, then deletes the environment and reports
 back.
 
+### What environments have I already created?
+
+To see what conda environments you have created on your system, type:  
+```
+conda env list
+```
+this will list the conda environment names and the locations (as a Unix path)
+of their package files.
+
+_A note:_ In some cases, the list may include environments without a name  
+(with only a path), which are automatically created, see, e.g., the
+[SnakemakeCrashCourse](../SnakemakeCrashCourse/README.md#using-conda-environments)
+
 ### Keeping your conda clean
 
 By default, conda saves all downloaded software tarballs (archives of source
@@ -363,3 +376,5 @@ Create the environmentand activate it. Check that you can run bedtools.
 4. Add `samtools` to the environment file and update the environment. Check
 that it worked.
 5. Deactivate and remove the environment.
+6. Finally, as a good practice, clean your conda installation:  
+`conda clean -all`
