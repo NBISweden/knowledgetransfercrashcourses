@@ -101,7 +101,7 @@ _make_ program". However, the basic snakemake rule syntax is not so very much
 python at all... and you definitely don't need to be a python expert to start
 using snakemake. However, you _can_ use python code snippets _almost_ anywhere
 in the Snakefile (see examples in the Mapping example Snakefile
-[mappingSnakefile.smk](./mappingSnakefile.smk)). In the text and examples below,
+[MappingSnakefile.smk](./MappingSnakefile.smk)). In the text and examples below,
 similarities with python will be indicated, but can mostly be ignored.
 
 The different parts that constitute a snakemake workflow are described below.
@@ -195,7 +195,7 @@ required by the rule (see further [Using conda environments](#Using\ conda\ envi
 [Cluster jobs, groups, and localrules](#Cluster\ jobs,\ groups,\ and\ localrules))
 
 Examples on how these are used can be found below and in the Snakefile
-[mapping.smk](/mapping.smk).
+[MappingSnakefile.smk](/MappingSnakefile.smk).
 
 
 ### Wildcards and connecting rules
@@ -216,10 +216,10 @@ expanding the wildcard becomes `mapped/mysample.sam`; if this file exists,
 snakemake will use this file as the input, Otherwise, it will look for
 another rule with an output matching `mapped/mysample.sam`and run this
 other rule to create the input. If you study the workflow in the
-Snakefile [mappingSnakefile.smk](./mappingSmakefile.smk), you will see that
+Snakefile [MappingSnakefile.smk](./MappingSnakefile.smk), you will see that
 different rules have matching output and input; this behaviour creates a
 sequence of rules to be run to create `mapped/mysample.bam` -- a *workflow*!.
-(Can you see which rule in [mappingSnakefile.smk](./mappingSnakeafile.smk)
+(Can you see which rule in [MappingSnakefile.smk](./MappingSnakefile.smk)
 matches the output `"mapped/mysample.sam"`? What is its input after
 expanding the wildcard?).
 
@@ -229,14 +229,14 @@ If snakemake is run without an explicit file argument (see below under [Running
 Snakemake](#Running\ Snakemake)), the first rule in the Snakefile is by default
 run. Therefore, the first rule is often designed as a, so-called, _target_ rule
 that only has an input directive comprising the desired final output files (see
-example in [mappingSnakefile.smk](./mappingSnakefile.smk)).
+example in [MappingSnakefile.smk](./MappingSnakefile.smk)).
 
 With the exception of the Target rule, rules can be written in any order in the
 Snakefile. It makes sense to have them in 'chronological' order, i.e., the order
 they are expected to be executed. Most people will find it easier to read the
 Snakefile in such an order.
 
-The workflow in [mappingSnakefile.smk](./mappingSnakeafilekefile.smk) is set
+The workflow in [MappingSnakefile.smk](./MappingSnakefile.smk) is set
 up to analyze a single sample by first soft-link the external files (fastq-file
 and reference genome fasta file) needed into the analysis directory, then map
 all reads in the fastq file to the reference genome, and finally sorting and
@@ -282,7 +282,7 @@ rule index:
 
 Moreover, if some jobs are ridiculously short (e.g., soft-linking external
 files), these can be run on the login node by listing them as `localrules`
-(see example in [mappingSnakefile.smk](./mappingSnakefile.smk)).
+(see example in [MappingSnakefile.smk](./MappingSnakefile.smk)).
 
 ### Using conda environments
 
@@ -388,7 +388,7 @@ variable3:
 If the configure file location is defined in the Snakefile, as, e.g.,
 
 ```
-configfile: "mappingConfig.yaml"
+configfile: "MappingConfig.yaml"
 ```
 
 either of the configure file examples above will be expand to the same python
@@ -398,7 +398,7 @@ dictionary, which can be accessed by `config["variablename"]`. Thus,
 - `config["variable2"]` expands to the python list `["value1", "value2"]`, and
 - `config["variable3"]["key1"]` expand to`"value1"`
 
-(see further [mappingConfig.yaml](./mappingConfig.yaml)).
+(see further [MappingConfig.yaml](./MappingConfig.yaml)).
 
 ### _Tabular_ configure files in spreadsheet text format
 
@@ -520,7 +520,7 @@ mapAndFilter:
 The `__default__` values are implicitly used for all non-local rules, while
 explicit rule- or group-specific settings change one or more individual values
 for the corresponding rule or group (see further examples in
-[mappingCluster.yaml](mappingCluster.yaml)), These values can be accessed in the
+[MappingCluster.yaml](MappingCluster.yaml)), These values can be accessed in the
 `--cluster` `sbatch` command as wildcards of the form `{cluster.variable}`.
 These wildcards are expanded on a rule basis, so that for rules in the group
 `mapAndFilter` `{cluster.time}` will expand to 1.5h, while for all other rules
@@ -582,13 +582,13 @@ bash doMapping.sh -n path/to/requested/outputfile
 ## Exercises
 
 In the exercises, the workflow defined in the Snakefile
-[mappingSnakefile.smk](/mappingSnakefile.smk) is used together with this [Example
+[MappingSnakefile.smk](/MappingSnakefile.smk) is used together with this [Example
 data](../ExampleData/README.md).
 
 Throughout all exercises, take a look at the Snakefile
-[mappingSnakefile.smk](mappingSnakefile.smk), the config files
-[mappingConfig.yaml](mappingConfig.yaml) and
-[mappingSamples.tsv](mappingSamples.tsv), and the env files, and try to
+[MappingSnakefile.smk](MappingSnakefile.smk), the config files
+[MappingConfig.yaml](MappingConfig.yaml) and
+[MappingSamples.tsv](MappingSamples.tsv), and the env files, and try to
 understand what they do and what happens when you run the commands in the
 exercises.
 
