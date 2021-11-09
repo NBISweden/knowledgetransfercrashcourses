@@ -77,9 +77,10 @@ but the choice of which to use is almost arbitrary. I will here mainly refer
 to the GitHub web interface, but will try to mention differences in Bitbucket.
 Unfortunately, I don't have experience of GitLab.
 
-You will (almost certainly) need to apply for an an account to the
-central repository you choose to use; here follows links to the account
-application pages for [GitHub](https://github.com/join),
+For this crash course, you will not (I believe) need a GitHub account, but
+for your future work, you will (almost certainly) need to apply for an an
+account to the central repository you choose to use; here follows links to the
+account application pages for [GitHub](https://github.com/join),
 [Bitbucket](https://id.atlassian.com/signup?application=bitbucket&continue=https://bitbucket.org/account/signin/?optintocst=1&next=/?aidsignup=1),
 [GitLab](https://gitlab.com/users/sign_up?test=capabilities).
 
